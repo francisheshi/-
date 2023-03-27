@@ -1,0 +1,6 @@
+.sidebar-menu {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    width: 35em;
+}
