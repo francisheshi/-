@@ -33,18 +33,20 @@ const Title2 = () => {
             
             <Button className='collapse-code' onClick={collapse} type='primary' size='large'>Collapse</Button>
                 <br />
-            <Form className='textarea-form'>
-                <TextArea className='textarea' size='large' disabled={true} rows={15} value={textareaValue}>{textareaValue}</TextArea>
-                <Button
-                    className='copy-code'
-                    htmlType='submit'
-                    onClick={copyFile}
-                    type='dashed'
-                    size='small'
-                >
-                    Copy
-                </Button>
-            </Form>
+            {!isExpanded && (
+                <Form className='textarea-form'>
+                    <TextArea className='textarea' size='large' disabled={true} rows={15} value={textareaValue}>{textareaValue}</TextArea>
+                    <Button
+                        className='copy-code'
+                        htmlType='submit'
+                        onClick={copyFile}
+                        type='dashed'
+                        size='small'
+                    >
+                        Copy
+                    </Button>
+                </Form>
+            )}
         </div>
     );
 }
