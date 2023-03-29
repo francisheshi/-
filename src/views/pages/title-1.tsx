@@ -10,7 +10,7 @@ import './pages-style.css';
 
 
 const { TextArea } = Input;
-const obj = JSON.parse('{"name":"John", "age":30, "city":"New York"}');
+const obj = JSON.parse(`{'name':'John', 'age':30, 'city':'New York'}`);
 const textareaValue = JSON.stringify(obj, undefined, 2);
 
 const Title1 = () => {
