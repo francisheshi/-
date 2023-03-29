@@ -18,8 +18,6 @@ const App = () => {
         <Menus />
         
         <Routes>
-          <Route path='/' element={<Menus />} />
-
           <Route path='/pages/page-1' element={<Title1 />} />
           <Route path='/pages/page-2' element={<Title2 />} />
         </Routes>
