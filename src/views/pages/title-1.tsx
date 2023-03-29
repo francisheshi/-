@@ -1,5 +1,4 @@
-import React,
-    { useState } from 'react';
+import React, { useState } from 'react';
 import {
     Form,
     Button,
@@ -8,10 +7,8 @@ import {
 
 import './pages-style.css';
 
-
 const { TextArea } = Input;
-const obj = JSON.parse(`{"name":"John", "age":30, "city":"New York"}`);
-const textareaValue = JSON.stringify(obj, undefined, 2);
+const textareaValue = JSON.stringify(JSON.parse(`{"name":"John", "age":30, "city":"New York"}`), undefined, 2);
 
 const Title1 = () => {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -27,22 +24,21 @@ const Title1 = () => {
         e.preventDefault();
     }
     
+    
     return (
         <div>
             <h2>Title 1</h2>
             
-            <Button className='collapse-code' onClick={collapse} type='primary' size='large'>Collapse</Button>
+            <Button className='collapse-code' onClick={collapse} type='primary' size='large'>
+                Collapse
+            </Button>
                 <br />
             {!isExpanded && (
                 <Form className='textarea-form'>
-                    <TextArea className='textarea' size='large' disabled={true} rows={15} value={textareaValue}>{textareaValue}</TextArea>
-                    <Button
-                        className='copy-code'
-                        htmlType='submit'
-                        onClick={copyFile}
-                        type='dashed'
-                        size='small'
-                    >
+                    <TextArea className='textarea' size='large' disabled={true} rows={15} value={textareaValue}>
+                        {textareaValue}
+                    </TextArea>
+                    <Button className='copy-code' htmlType='submit' onClick={copyFile} type='dashed' size='small'>
                         Copy
                     </Button>
                 </Form>

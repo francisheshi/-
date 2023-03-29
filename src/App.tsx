@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Menus from './views/menu';
 import Title1 from './views/pages/title-1';
 import Title2 from './views/pages/title-2';
@@ -13,7 +9,7 @@ import './App.css';
 const App = () => {
 
   return (
-    <div className="App">
+    <div className='App'>
       <Router>
         <Menus />
         
