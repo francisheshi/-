@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input } from "antd";
-import AntdButton from "../AntdButton";
+import AntdButton from "../dataEntry/AntdButton";
 
 const { TextArea } = Input;
 const formAreaValue = `import React from "react";

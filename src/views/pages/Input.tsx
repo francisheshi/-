@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import InputAreaForm from "../../components/display/InputAreaForm";
-import AntdInputField from "../../components/AntdInputField";
+import AntdInputField from "../../components/dataEntry/AntdInputField";
 
 import "../../css/pages-style.css";
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Button from "../../components/AntdButton";
+import Button from "../../components/dataEntry/AntdButton";
 import AntdTextAreaForm from "../../components/display/TextAreaForm";
 
 import "../../css/pages-style.css";

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import FormArea from "../../components/display/FormArea";
-import AntdForm from "../../components/AntdForm";
+import AntdForm from "../../components/dataEntry/AntdForm";
 
 import "../../css/form.css";
 
