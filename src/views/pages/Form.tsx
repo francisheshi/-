@@ -5,7 +5,7 @@ import AntdForm from "../../components/dataEntry/AntdForm";
 import "../../css/form.css";
 
 const formCustom = {
-  top: 1,
+  top: -3,
   right: 5,
   left: 34,
 };
@@ -15,7 +15,7 @@ const Form = () => {
 
   return (
     <div className="form-container">
-      <h2 style={formCustom}>Form</h2>
+      <h2 style={formCustom}>Forms</h2>
 
       <AntdForm className="form-div" />
 

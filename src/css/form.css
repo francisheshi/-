@@ -10,8 +10,8 @@
 
 .form-div {
   position: relative;
-  width: 70%;
-  bottom: -5px;
+  bottom: 20px;
+  top: 18px;
   left: 5%;
 }
 
@@ -20,8 +20,8 @@
   top: 26%;
   left: 44%;
   transform: translate(-35%, -50%);
-  height: 85%;
-  width: 310%;
+  height: 90%;
+  width: 260%;
 }
 
 .form_test {

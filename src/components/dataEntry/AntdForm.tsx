@@ -21,11 +21,12 @@ const AntdForm = (props: AntdFormProps) => {
   return (
     <Form
       {...props}
-      labelCol={{ span: 10 }}
-      style={{ margin: "8px" }}
+      labelCol={{ span: 32 }}
+      style={{ margin: "16px" }}
       initialValues={{ remember: true }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
+      layout="horizontal"
       autoComplete="off"
     >
       <Form.Item
@@ -33,7 +34,7 @@ const AntdForm = (props: AntdFormProps) => {
         name="username"
         rules={[{ required: true, message: "Please input your username!" }]}
       >
-        <Input />
+        <Input placeholder="Add username..." />
       </Form.Item>
 
       <Form.Item
@@ -41,7 +42,7 @@ const AntdForm = (props: AntdFormProps) => {
         name="password"
         rules={[{ required: true, message: "Please input your password!" }]}
       >
-        <Input.Password />
+        <Input.Password placeholder="Add password..." />
       </Form.Item>
 
       <Form.Item
