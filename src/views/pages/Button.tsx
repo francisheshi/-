@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Button from "../../components/dataEntry/AntdButton";
-import AntdTextAreaForm from "../../components/display/TextAreaForm";
+import AntdButton from "../../components/dataEntry/AntdButton";
+import TextAreaForm from "../../components/display/TextAreaForm";
 
 import "../../css/pages-style.css";
 
@@ -11,9 +11,9 @@ const ButtonComponent = () => {
     <div className="buttonComp-container">
       <h2>Button</h2>
 
-      <Button className="collapse-code" type="primary" name="Button" />
+      <AntdButton className="collapse-code" type="primary" name="Button" />
 
-      {!isExpanded && <AntdTextAreaForm />}
+      {!isExpanded && <TextAreaForm />}
     </div>
   );
 };

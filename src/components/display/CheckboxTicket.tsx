@@ -3,31 +3,32 @@ import { Form, Input } from "antd";
 import AntdButton from "../dataEntry/AntdButton";
 
 const { TextArea } = Input;
-const textareaValue = "<Button type='primary' name='Button' />";
 
-const TextAreaForm = () => {
+const checkboxTicket = `<AntdCheckbox className="collapse-code" name="Checkbox" />`;
+
+const CheckboxTicket = () => {
   const [isCopy, setIsCopy] = useState(false);
 
   const copyFile = async (e: any) => {
-    await navigator.clipboard.writeText(textareaValue);
+    await navigator.clipboard.writeText(checkboxTicket);
     setIsCopy(!isCopy);
     e.preventDefault();
   };
 
   return (
-    <Form className="textarea-form">
+    <Form className="checkbox-ticket">
       <TextArea
-        className="textarea"
+        className="checkbox"
         size="large"
         disabled={true}
         rows={15}
-        value={textareaValue}
+        value={checkboxTicket}
       >
-        {textareaValue}
+        {checkboxTicket}
       </TextArea>
       <AntdButton
         name="Copy"
-        className="copy-code-button"
+        className="copy-code-check"
         htmlType="submit"
         onClick={copyFile}
         type="dashed"
@@ -37,4 +38,4 @@ const TextAreaForm = () => {
   );
 };
 
-export default TextAreaForm;
+export default CheckboxTicket;

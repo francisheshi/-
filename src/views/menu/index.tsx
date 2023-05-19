@@ -37,6 +37,16 @@ const Menus = () => {
             key: "3",
             icon: <NavLink to="/pages/form" />,
           },
+          {
+            label: "Checkbox",
+            key: "4",
+            icon: <NavLink to="/pages/checkbox" />,
+          },
+          {
+            label: "Dropdown",
+            key: "5",
+            icon: <NavLink to="/pages/dropdown" />,
+          },
         ]}
       />
     </div>
