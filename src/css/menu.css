@@ -1,0 +1,16 @@
+.sidebar-menu {
+    align-content: start;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    display: flex;
+    position: relative;
+    width: 24em;
+    gap: 10px;
+    row-gap: 20px;
+}
+
+.menu-sidebar {
+    justify-items: center;
+    width: 210px;
+    flex: none;
+}
