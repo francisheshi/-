@@ -1,54 +1,81 @@
-import React, { useState } from 'react';
-import {
-    Form,
-    Button,
-    Input
-} from 'antd';
+import React, { FC, useState } from "react";
+import { Form, Button, Input } from "antd";
+import { Card } from "@tremor/react";
+import { useSearch } from "../../context/SearchContext"; // Adjust the import path as needed
 
-import './pages-style.css';
-
+import "./pages-style.css";
 
 const { TextArea } = Input;
-const obj = JSON.parse('{"name": "Franci", "age": 23, "city": "Tirana"}');
-const textareaValue = JSON.stringify(obj, undefined, 2);
 
-const Title2 = () => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [isCopy, setIsCopy] = useState(false);
+const Title2: FC = () => {
+  const { query: searchQuery } = useSearch(); // Ensure `query` is the right name
+  const [objContent] = useState([
+    { title: "Card 1", name: "John", age: 30, city: "New York" },
+  ]);
 
-    const collapse = () => {
-        setIsExpanded(!isExpanded)
-    }
+  const [expandedItems, setExpandedItems] = useState<boolean[]>(
+    new Array(objContent.length).fill(false)
+  );
 
-    const copyFile = async (e: any) => {
-        await navigator.clipboard.writeText(textareaValue);
-        setIsCopy(!isCopy);
-        e.preventDefault();
-    }
+  const collapse = (index: number) => {
+    const newExpandedItems = [...expandedItems];
+    newExpandedItems[index] = !newExpandedItems[index];
+    setExpandedItems(newExpandedItems);
+  };
 
-    
-    return (
-        <div>
-            <h2>Title 2</h2>
-            
-            <Button className='collapse-code' onClick={collapse} type='primary' size='large'>Collapse</Button>
-                <br />
-            {!isExpanded && (
-                <Form className='textarea-form'>
-                    <TextArea className='textarea' size='large' disabled={true} rows={15} value={textareaValue}>{textareaValue}</TextArea>
-                    <Button
-                        className='copy-code'
-                        htmlType='submit'
-                        onClick={copyFile}
-                        type='dashed'
-                        size='small'
-                    >
-                        Copy
-                    </Button>
-                </Form>
-            )}
+  const copyFile = async (item: any) => {
+    const textareaValue = JSON.stringify(item, undefined, 2);
+    await navigator.clipboard.writeText(textareaValue);
+  };
+
+  const filteredContent = objContent.filter((item) =>
+    item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div className="flex-1 p-4 text-lg">
+      <h1 className="text-4xl font-bold mb-4">Card</h1>
+
+      {filteredContent.map((item, index) => (
+        <div key={index} className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">{item.title}</h2>
+          <Button
+            className="mb-4"
+            onClick={() => collapse(index)}
+            type="primary"
+            size="large"
+          >
+            {expandedItems[index] ? "Collapse" : "Expand"}
+          </Button>
+          {expandedItems[index] && (
+            <div className="bg-white shadow-lg border-2 border-gray-800 rounded-lg p-4 max-w-lg">
+              <Card className="p-4 border-2 border-gray-800 rounded-lg shadow-md">
+                <h3 className="text-xl font-bold mb-2">Details</h3>
+                <p>
+                  <strong>Name:</strong> {item.name}
+                </p>
+                <p>
+                  <strong>Age:</strong> {item.age}
+                </p>
+                <p>
+                  <strong>City:</strong> {item.city}
+                </p>
+              </Card>
+              <Button
+                className="mt-4"
+                htmlType="button"
+                onClick={() => copyFile(item)}
+                type="dashed"
+                size="small"
+              >
+                Copy
+              </Button>
+            </div>
+          )}
         </div>
-    );
-}
- 
+      ))}
+    </div>
+  );
+};
+
 export default Title2;
