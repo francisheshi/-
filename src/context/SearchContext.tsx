@@ -12,8 +12,8 @@ export const SearchProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [query, setQuery] = useState<string>("");
 
-  const updateSearchQuery = (query: string) => {
-    setQuery(query);
+  const updateSearchQuery = (newQuery: string) => {
+    setQuery(newQuery);
   };
 
   return (
@@ -25,7 +25,7 @@ export const SearchProvider: React.FC<{ children: ReactNode }> = ({
 
 export const useSearch = () => {
   const context = useContext(SearchContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useSearch must be used within a SearchProvider");
   }
   return context;

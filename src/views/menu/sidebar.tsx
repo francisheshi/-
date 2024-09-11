@@ -10,35 +10,47 @@ const SideBar = () => {
   };
 
   return (
-    <div className="flex flex-col relative w-[40em]">
-      <div className="w-[250px] bg-gray-100 p-4 shadow-md rounded-md">
+    <div className="grid w-[40em]">
+      <div className="w-[250px] bg-gray-100 p-3 rounded-md">
         <Menu
           onClick={handleClick}
-          mode="vertical"
+          className="space-y-2" // Tailwind spacing for buttons
           selectable={true}
-          className="space-y-4" // Tailwind spacing for buttons
+          mode="vertical"
         >
           <Menu.Item key="1">
             <Button
-              type="primary"
-              block
-              size="large"
               className="rounded-md shadow-lg bg-blue-500 hover:bg-blue-600"
+              type="primary"
+              size="large"
+              block
             >
               <NavLink to="/pages/page-1" className="text-white">
-                Page 1
+                TextAreas
               </NavLink>
             </Button>
           </Menu.Item>
           <Menu.Item key="2">
             <Button
-              type="primary"
-              block
-              size="large"
               className="rounded-md shadow-lg bg-blue-500 hover:bg-blue-600"
+              type="primary"
+              size="large"
+              block
             >
               <NavLink to="/pages/page-2" className="text-white">
-                Page 2
+                Cards
+              </NavLink>
+            </Button>
+          </Menu.Item>
+          <Menu.Item key="3">
+            <Button
+              className="rounded-md shadow-lg bg-blue-500 hover:bg-blue-600"
+              type="primary"
+              size="large"
+              block
+            >
+              <NavLink to="/pages/page-3" className="text-white">
+                Tables
               </NavLink>
             </Button>
           </Menu.Item>

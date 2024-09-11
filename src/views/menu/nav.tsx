@@ -14,31 +14,45 @@ const NavBar: FC = () => {
     if (!key) navigate(key);
   };
 
+  const searchToPathMap: { [key: string]: string } = {
+    "page 1": "/pages/page-1",
+    "page 2": "/pages/page-2",
+    "page 3": "/pages/page-1",
+  };
+
   const handleSearch = () => {
     updateSearchQuery(searchInput);
 
-    // Redirect based on search results, this is just an example
-    // You may need a more complex logic to determine the correct path
-    if (searchInput.includes("Page 1")) {
-      navigate("/pages/page-1");
-    } else if (searchInput.includes("Page 2")) {
-      navigate("/pages/page-2");
+    const normalizedSearch = searchInput.trim().toLowerCase();
+
+    let targetPath = "";
+
+    for (const [key, path] of Object.entries(searchToPathMap)) {
+      if (normalizedSearch.includes(key)) {
+        targetPath = path;
+        break;
+      }
+    }
+
+    if (targetPath) {
+      navigate(targetPath);
     } else {
-      navigate("/pages/not-found"); // Example for a page not found
+      navigate("/pages/not-found");
     }
   };
 
   return (
-    <div className="w-full bg-blue-600 p-4 fixed top-0 z-50 shadow-md ease-in-out">
-      <div className="container flex items-center justify-around">
-        <h1 className="text-white text-4xl font-semibold transform transition-transform duration-700 ease-in-out hover:scale-105">
-          Story Book
-        </h1>
+    <div className="w-full bg-blue-600 p-3 fixed top-0 items-center justify-end">
+      {/* H1 Tag at the Start */}
+      <h1 className="text-white text-4xl font-semibold duration-700 ease-in-out hover:scale-105">
+        Story Book
+      </h1>
+      <div className="flex items-center justify-center">
         <Menu
           onClick={handleClick}
           mode="horizontal"
           selectable={true}
-          className="space-x-4"
+          className="items-center space-x-2"
         >
           <Menu.Item key="1">
             <Button
@@ -47,7 +61,7 @@ const NavBar: FC = () => {
               className="rounded-md shadow-lg bg-blue-500 hover:bg-blue-600 transition-all duration-500 ease-in-out transform hover:-translate-y-1"
             >
               <NavLink to="/pages/page-1" className="text-white">
-                Page 1
+                TextAreas
               </NavLink>
             </Button>
           </Menu.Item>
@@ -58,17 +72,32 @@ const NavBar: FC = () => {
               className="rounded-md shadow-lg bg-blue-500 hover:bg-blue-600 transition-all duration-500 ease-in-out transform hover:-translate-y-1"
             >
               <NavLink to="/pages/page-2" className="text-white">
-                Page 2
+                Cards
+              </NavLink>
+            </Button>
+          </Menu.Item>
+          <Menu.Item key="3">
+            <Button
+              type="primary"
+              size="large"
+              className="rounded-md shadow-lg bg-blue-500 hover:bg-blue-600 transition-all duration-500 ease-in-out transform hover:-translate-y-1"
+            >
+              <NavLink to="/pages/page-3" className="text-white">
+                Tables
               </NavLink>
             </Button>
           </Menu.Item>
         </Menu>
-        <Search
-          placeholder="Search..."
-          onSearch={handleSearch}
-          className="rounded-md w-80"
-          enterButton="Search"
-        />
+        <div className="flex-grow flex justify-center px-12">
+          <Search
+            placeholder="Search..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onSearch={handleSearch}
+            className="rounded-md w-80"
+            enterButton="Search"
+          />
+        </div>
       </div>
     </div>
   );

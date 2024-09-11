@@ -1,14 +1,10 @@
-import React, { FC, useState } from "react";
-import { Form, Button, Input } from "antd";
+import React, { useState } from "react";
+import { Button } from "antd";
 import { Card } from "@tremor/react";
-import { useSearch } from "../../context/SearchContext"; // Adjust the import path as needed
 
 import "./pages-style.css";
 
-const { TextArea } = Input;
-
-const Title2: FC = () => {
-  const { query: searchQuery } = useSearch(); // Ensure `query` is the right name
+const Title2 = ({ query }: { query: string }) => {
   const [objContent] = useState([
     { title: "Card 1", name: "John", age: 30, city: "New York" },
   ]);
@@ -29,51 +25,53 @@ const Title2: FC = () => {
   };
 
   const filteredContent = objContent.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    item.title.toLowerCase().includes(query.toLowerCase())
   );
 
   return (
-    <div className="flex-1 p-4 text-lg">
-      <h1 className="text-4xl font-bold mb-4">Card</h1>
+    <div className="flex-1 p-10 text-lg">
+      <h1 className="text-4xl font-bold mb-10">Card</h1>
 
-      {filteredContent.map((item, index) => (
-        <div key={index} className="mb-6">
-          <h2 className="text-2xl font-semibold mb-2">{item.title}</h2>
-          <Button
-            className="mb-4"
-            onClick={() => collapse(index)}
-            type="primary"
-            size="large"
-          >
-            {expandedItems[index] ? "Collapse" : "Expand"}
-          </Button>
-          {expandedItems[index] && (
-            <div className="bg-white shadow-lg border-2 border-gray-800 rounded-lg p-4 max-w-lg">
-              <Card className="p-4 border-2 border-gray-800 rounded-lg shadow-md">
-                <h3 className="text-xl font-bold mb-2">Details</h3>
-                <p>
-                  <strong>Name:</strong> {item.name}
-                </p>
-                <p>
-                  <strong>Age:</strong> {item.age}
-                </p>
-                <p>
-                  <strong>City:</strong> {item.city}
-                </p>
-              </Card>
-              <Button
-                className="mt-4"
-                htmlType="button"
-                onClick={() => copyFile(item)}
-                type="dashed"
-                size="small"
-              >
-                Copy
-              </Button>
-            </div>
-          )}
-        </div>
-      ))}
+      {filteredContent
+        // .filter((item) => item.toLowerCase().includes(query.toLowerCase()))
+        .map((item, index) => (
+          <div key={index} className="mb-6">
+            <h2 className="text-2xl font-semibold mb-2">{item.title}</h2>
+            <Button
+              className="mb-4"
+              onClick={() => collapse(index)}
+              type="primary"
+              size="large"
+            >
+              {expandedItems[index] ? "Collapse" : "Expand"}
+            </Button>
+            {expandedItems[index] && (
+              <div className="bg-white shadow-lg border-2 border-gray-800 rounded-lg p-4 max-w-lg">
+                <Card className="p-4 border-2 border-gray-800 rounded-lg shadow-md">
+                  <h3 className="text-xl font-bold mb-2">Details</h3>
+                  <p>
+                    <strong>Name:</strong> {item.name}
+                  </p>
+                  <p>
+                    <strong>Age:</strong> {item.age}
+                  </p>
+                  <p>
+                    <strong>City:</strong> {item.city}
+                  </p>
+                </Card>
+                <Button
+                  className="mt-4"
+                  htmlType="button"
+                  onClick={() => copyFile(item)}
+                  type="dashed"
+                  size="small"
+                >
+                  Copy
+                </Button>
+              </div>
+            )}
+          </div>
+        ))}
     </div>
   );
 };
