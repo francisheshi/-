@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import SideBar from "./views/menu/sidebar";
 import Title1 from "./views/pages/title-1";
@@ -9,6 +9,49 @@ import Title3 from "./views/pages/title-3";
 
 const App = () => {
   const { query } = useSearch();
+
+  const [objContent] = useState([
+    {
+      id: 1,
+      name: "John",
+      surname: "Doe",
+      age: 30,
+      city: "Paris",
+      country: "France",
+    },
+    {
+      id: 2,
+      name: "Franci",
+      surname: "Sheshi",
+      age: 24,
+      city: "Tirana",
+      country: "Albania",
+    },
+    {
+      id: 3,
+      name: "Artur",
+      surname: "Begolli",
+      age: 36,
+      city: "Munich",
+      country: "Germany",
+    },
+    {
+      id: 4,
+      name: "Andre",
+      surname: "Pavigno",
+      age: 32,
+      city: "Firenze",
+      country: "Italy",
+    },
+    {
+      id: 5,
+      name: "Alessio",
+      surname: "Rondo",
+      age: 29,
+      city: "Roma",
+      country: "Italy",
+    },
+  ]);
   return (
     <div className="App">
       <Layout>
@@ -29,7 +72,7 @@ const App = () => {
                 />
                 <Route
                   path="/pages/page-3"
-                  element={<Title3 query={query} />}
+                  element={<Title3 query={query} data={objContent} />}
                 />
               </Routes>
             </div>

@@ -9,3 +9,11 @@
 p {
   font-size: medium;
 }
+
+/* Ensure table is scrollable on smaller screens */
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: auto;
+    display: block;
+  }
+}

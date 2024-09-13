@@ -1,69 +1,50 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
 } from "@tremor/react";
-
+import { useNavigate } from "react-router-dom";
+import PaginationTable from "../menu/ui/PaginationTable";
 import "./pages-style.css";
 
-const Title3 = ({ query }: { query: string }) => {
+const Title3 = ({ query, data }: { query: string; data: any[] }) => {
   const navigate = useNavigate();
 
-  const [objContent] = useState([
-    {
-      id: 1,
-      name: "John",
-      surname: "Doe",
-      age: 30,
-      city: "Paris",
-      country: "France",
-    },
-    {
-      id: 2,
-      name: "Franci",
-      surname: "Sheshi",
-      age: 24,
-      city: "Tirana",
-      country: "Albania",
-    },
-    {
-      id: 3,
-      name: "Artur",
-      surname: "Begolli",
-      age: 36,
-      city: "Munich",
-      country: "Germany",
-    },
-    {
-      id: 4,
-      name: "Andre",
-      surname: "Pavigno",
-      age: 32,
-      city: "Firenze",
-      country: "Italy",
-    },
-    {
-      id: 5,
-      name: "Alessio",
-      surname: "Rondo",
-      age: 29,
-      city: "Roma",
-      country: "Italy",
-    },
-  ]);
   const [isTableVisible, setIsTableVisible] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(2);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(data.length / rowsPerPage);
+
+  // Get data for current page
+  const paginatedData = data.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  // Handle page change
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
+  // Handle rows per page change
+  const handleRowsPerPageChange = (newRowsPerPage: number) => {
+    setRowsPerPage(newRowsPerPage);
+    setCurrentPage(1); // Reset to first page after rows per page change
+  };
 
   // Function to toggle the table visibility
   const toggleTableVisibility = () => {
     setIsTableVisible((prevState) => !prevState);
   };
 
-  const filteredContent = objContent.filter((item) => {
+  // Filter content based on query
+  const filteredContent = data.filter((item) => {
     const itemIdString = item.id.toString();
     return (
       Number(itemIdString.replace(/\.$/, "")) ===
@@ -86,62 +67,72 @@ const Title3 = ({ query }: { query: string }) => {
         <>
           <Button
             className="mb-4 text-center"
-            type="primary"
-            size="large"
+            type="button"
+            size="lg"
             onClick={toggleTableVisibility}
           >
             {isTableVisible ? "Collapse" : "Expand"}
           </Button>
           {isTableVisible && (
             <div className="bg-white shadow-lg border-2 border-gray-1000 rounded-lg p-4 border-r-[10px]">
-              <Table className="mt-6">
-                <TableHead>
-                  <TableRow className="border-b border-tremor-border dark:border-dark-tremor-border items-center border-6">
-                    <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                      Title
-                    </TableCell>
-                    <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                      Name
-                    </TableCell>
-                    <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                      Surname
-                    </TableCell>
-                    <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                      Age
-                    </TableCell>
-                    <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                      City
-                    </TableCell>
-                    <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                      Country
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {objContent.map((item: any) => (
-                    <TableRow key={item.id} id={item.id}>
-                      <TableCell className="border bg-green-200 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                        {item.id + "."}
+              <div className="overflow-x-auto">
+                <Table className="mt-6 w-full">
+                  <TableHead>
+                    <TableRow className="border-b border-tremor-border dark:border-dark-tremor-border items-center border-6">
+                      <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                        Title
                       </TableCell>
-                      <TableCell className="border border-gray-800 dark:text-dark-tremor-content-strong">
-                        {item.name}
+                      <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                        Name
                       </TableCell>
-                      <TableCell className="border border-gray-800 dark:text-dark-tremor-content-strong">
-                        {item.surname}
+                      <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                        Surname
                       </TableCell>
-                      <TableCell className="border border-gray-800 dark:text-dark-tremor-content-strong">
-                        {item.age}
+                      <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                        Age
                       </TableCell>
-                      <TableCell className="border border-gray-800 dark:text-dark-tremor-content-strong">
-                        {item.city}
+                      <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                        City
                       </TableCell>
-                      <TableCell className="text-right border border-gray-800 dark:text-dark-tremor-content-strong">
-                        {item.country}
+                      <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                        Country
                       </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHead>
+                  <TableBody>
+                    {paginatedData.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell className="border bg-green-200 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                          {item.id + "."}
+                        </TableCell>
+                        <TableCell className="border border-gray-800 dark:text-dark-tremor-content-strong">
+                          {item.name}
+                        </TableCell>
+                        <TableCell className="border border-gray-800 dark:text-dark-tremor-content-strong">
+                          {item.surname}
+                        </TableCell>
+                        <TableCell className="border border-gray-800 dark:text-dark-tremor-content-strong">
+                          {item.age}
+                        </TableCell>
+                        <TableCell className="border border-gray-800 dark:text-dark-tremor-content-strong">
+                          {item.city}
+                        </TableCell>
+                        <TableCell className="border border-gray-800 dark:text-dark-tremor-content-strong">
+                          {item.country}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+              <PaginationTable
+                data={data}
+                currentPage={currentPage}
+                rowsPerPage={rowsPerPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleRowsPerPageChange}
+              />
             </div>
           )}
         </>
