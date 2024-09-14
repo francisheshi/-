@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "antd";
 import { Card } from "@tremor/react";
 
-import "./pages-style.css";
+import "../../styles/pages-style.css";
 
 const Title2 = ({ query }: { query: string }) => {
   const [objContent] = useState([

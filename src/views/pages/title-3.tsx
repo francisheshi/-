@@ -8,8 +8,9 @@ import {
   TableRow,
 } from "@tremor/react";
 import { useNavigate } from "react-router-dom";
-import PaginationTable from "../menu/ui/PaginationTable";
-import "./pages-style.css";
+import PaginationTable from "../../components/ui/PaginationTable";
+
+import "../../styles/pages-style.css";
 
 const Title3 = ({ query, data }: { query: string; data: any[] }) => {
   const navigate = useNavigate();

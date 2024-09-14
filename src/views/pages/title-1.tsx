@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Form, Button, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 
-import "./pages-style.css";
+import "../../styles/pages-style.css";
 
 const { TextArea } = Input;
 

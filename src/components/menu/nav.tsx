@@ -88,13 +88,13 @@ const NavBar: FC = () => {
             </Button>
           </Menu.Item>
         </Menu>
-        <div className="flex items-center px-64 justify-end">
+        <div className="flex items-center px-128 justify-end">
           <Search
             placeholder="Search..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             onSearch={handleSearch}
-            className="rounded-md w-80"
+            className="rounded-md w-[345px]"
             enterButton="Search"
           />
         </div>

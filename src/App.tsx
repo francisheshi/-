@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import SideBar from "./views/menu/sidebar";
+import SideBar from "./components/menu/sidebar";
 import Title1 from "./views/pages/title-1";
 import Title2 from "./views/pages/title-2";
-import Layout from "./views/menu/layout";
+import Layout from "./components/menu/layout";
 import { useSearch } from "./context/SearchContext";
 import Title3 from "./views/pages/title-3";
 
