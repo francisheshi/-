@@ -1,0 +1,26 @@
+/* Tailwind custom styles for Ant Design's calendar component */
+
+/* Calendar container */
+.custom-calendar {
+  @apply max-w-full; /* Full width for responsiveness */
+}
+
+/* Calendar header */
+.custom-calendar .ant-picker-calendar-header {
+  @apply flex justify-center items-center py-2; /* Flexbox alignment for the header */
+}
+
+/* Calendar date cells */
+.custom-calendar .ant-picker-cell-inner {
+  @apply flex items-center justify-center rounded-lg; /* Rounded date cells */
+}
+
+/* Selected date styling */
+.custom-calendar .ant-picker-calendar-date-selected {
+  @apply bg-blue-500 text-white; /* Tailwind's blue background and white text */
+}
+
+/* Hover effect on calendar cells */
+.custom-calendar .ant-picker-cell {
+  @apply cursor-pointer hover:bg-gray-100; /* Pointer cursor and hover effect */
+}

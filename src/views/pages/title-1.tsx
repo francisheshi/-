@@ -43,7 +43,7 @@ const Title1 = ({ query }: { query: string }) => {
 
   return (
     <div className="flex-1 p-10 text-lg">
-      <h1 className="text-4xl font-bold mb-10">Obj Expand & Copy</h1>
+      <h1 className="text-4xl font-bold mb-8">Obj Expand & Copy</h1>
 
       {filteredContent.length === 0 && query ? (
         <p className="text-lg">No results found for "{query}"</p>

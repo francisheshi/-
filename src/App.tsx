@@ -6,6 +6,7 @@ import Title2 from "./views/pages/title-2";
 import Layout from "./components/menu/layout";
 import { useSearch } from "./context/SearchContext";
 import Title3 from "./views/pages/title-3";
+import Title4 from "./views/pages/title-4";
 
 const App = () => {
   const { query } = useSearch();
@@ -84,6 +85,7 @@ const App = () => {
                   path="/pages/page-3"
                   element={<Title3 query={query} data={objContent} />}
                 />
+                <Route path="/pages/page-4" element={<Title4 />} />
               </Routes>
             </div>
           </div>

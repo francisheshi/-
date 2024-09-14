@@ -65,7 +65,7 @@ const Title3 = ({ query, data }: { query: string; data: any[] }) => {
 
   return (
     <div className="flex-1 p-10 text-lg">
-      <h1 className="text-4xl font-bold mb-10">Table</h1>
+      <h1 className="text-4xl font-bold mb-8">Table</h1>
       {filteredContent.length === 0 && query ? (
         <p className="text-lg">No results found for "{query}"</p>
       ) : (

@@ -30,7 +30,7 @@ const Title2 = ({ query }: { query: string }) => {
 
   return (
     <div className="flex-1 p-10 text-lg">
-      <h1 className="text-4xl font-bold mb-10">Card</h1>
+      <h1 className="text-4xl font-bold mb-8">Card</h1>
 
       {filteredContent
         // .filter((item) => item.toLowerCase().includes(query.toLowerCase()))
