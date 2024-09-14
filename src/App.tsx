@@ -18,6 +18,8 @@ const App = () => {
       age: 30,
       city: "Paris",
       country: "France",
+      numberCode: "+33",
+      isoCountryCodes: "FRA",
     },
     {
       id: 2,
@@ -26,6 +28,8 @@ const App = () => {
       age: 24,
       city: "Tirana",
       country: "Albania",
+      numberCode: "+355",
+      isoCountryCodes: "Alb",
     },
     {
       id: 3,
@@ -34,6 +38,8 @@ const App = () => {
       age: 36,
       city: "Munich",
       country: "Germany",
+      numberCode: "+49",
+      isoCountryCodes: "DEU",
     },
     {
       id: 4,
@@ -42,6 +48,8 @@ const App = () => {
       age: 32,
       city: "Firenze",
       country: "Italy",
+      numberCode: "+39",
+      isoCountryCodes: "Ita",
     },
     {
       id: 5,
@@ -50,6 +58,8 @@ const App = () => {
       age: 29,
       city: "Roma",
       country: "Italy",
+      numberCode: "+39",
+      isoCountryCodes: "Ita",
     },
   ]);
   return (
@@ -59,7 +69,7 @@ const App = () => {
           <aside className="w-full md:w-64 bg-gray-800 text-center fixed top-32 bottom-1 p-1">
             <SideBar />
           </aside>
-          <div className="flex-1 ml-0 md:ml-64 mt-16 md:mt-0 p-4 bg-gray-100">
+          <div className="flex-1 ml-0 md:ml-64 md:mt-0 p-5 bg-gray-100 pt-10">
             <div className="h-full flex flex-col">
               <Routes>
                 <Route

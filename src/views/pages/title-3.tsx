@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -11,11 +10,12 @@ import { useNavigate } from "react-router-dom";
 import PaginationTable from "../../components/ui/PaginationTable";
 
 import "../../styles/pages-style.css";
+import { Button } from "antd";
 
 const Title3 = ({ query, data }: { query: string; data: any[] }) => {
   const navigate = useNavigate();
 
-  const [isTableVisible, setIsTableVisible] = useState<boolean>(true);
+  const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(2);
 
@@ -40,7 +40,11 @@ const Title3 = ({ query, data }: { query: string; data: any[] }) => {
   };
 
   // Function to toggle the table visibility
-  const toggleTableVisibility = () => {
+  const [expandedItems, setExpandedItems] = useState<boolean[]>(
+    new Array(data.length).fill(false)
+  );
+
+  const collapse = () => {
     setIsTableVisible((prevState) => !prevState);
   };
 
@@ -66,11 +70,12 @@ const Title3 = ({ query, data }: { query: string; data: any[] }) => {
         <p className="text-lg">No results found for "{query}"</p>
       ) : (
         <>
+          <h2 className="text-2xl font-semibold mb-2">Table 1</h2>
           <Button
             className="mb-4 text-center"
-            type="button"
-            size="lg"
-            onClick={toggleTableVisibility}
+            type="primary"
+            size="large"
+            onClick={() => collapse()}
           >
             {isTableVisible ? "Collapse" : "Expand"}
           </Button>
@@ -98,6 +103,12 @@ const Title3 = ({ query, data }: { query: string; data: any[] }) => {
                       <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
                         Country
                       </TableCell>
+                      <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                        ISO Codes
+                      </TableCell>
+                      <TableCell className="border bg-red-100 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                        Number Code
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -120,6 +131,12 @@ const Title3 = ({ query, data }: { query: string; data: any[] }) => {
                         </TableCell>
                         <TableCell className="border border-gray-800 dark:text-dark-tremor-content-strong">
                           {item.country}
+                        </TableCell>
+                        <TableCell className="border border-gray-800 dark:text-dark-tremor-content-strong">
+                          {item.isoCountryCodes}
+                        </TableCell>
+                        <TableCell className="border border-gray-800 dark:text-dark-tremor-content-strong">
+                          {item.numberCode}
                         </TableCell>
                       </TableRow>
                     ))}
