@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Input, Button } from "antd";
-import type { Moment } from "moment";
+import moment, { Moment } from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+
+interface Reminder {
+  text: string;
+  time: any; // Unix timestamp
+}
 
 interface ReminderModalProps {
   visible: boolean;
-  selectedDate: Moment | null;
-  existingReminders: string[]; // New prop to receive existing reminders
+  selectedDate: Moment;
+  existingReminders: Reminder[];
   onClose: () => void;
-  onSave: (reminders: string[]) => void;
+  onSave: (reminders: Reminder[]) => void;
+  audio: HTMLAudioElement;
 }
 
 const ReminderModal: React.FC<ReminderModalProps> = ({
@@ -18,42 +25,46 @@ const ReminderModal: React.FC<ReminderModalProps> = ({
   onClose,
   onSave,
 }) => {
-  const [reminderText, setReminderText] = useState(""); // Single reminder input
-  const [remindersList, setRemindersList] = useState<string[]>([]); // List of reminders
+  const [reminderText, setReminderText] = useState("");
+  const [reminderTime, setReminderTime] = useState<Moment | null>(null);
+  const [remindersList, setRemindersList] = useState<Reminder[]>([]);
 
-  // Load existing reminders when modal is opened
   useEffect(() => {
+    // Set reminders when modal is opened
     if (visible) {
       setRemindersList(existingReminders);
     }
   }, [visible, existingReminders]);
 
-  // Add reminder to the list
   const handleAddReminder = () => {
-    if (reminderText.trim() !== "") {
-      setRemindersList((prevReminders) => [...prevReminders, reminderText]);
-      setReminderText(""); // Clear input after adding
+    if (reminderText.trim() !== "" && reminderTime) {
+      const newReminder: Reminder = {
+        text: reminderText,
+        time: reminderTime.valueOf(), // Store as Unix timestamp
+      };
+      setRemindersList([...remindersList, newReminder]); // Add to the list
+      setReminderText(""); // Reset fields
+      setReminderTime(null);
     }
   };
 
-  // Remove reminder from the list
   const handleDeleteReminder = (index: number) => {
     setRemindersList((prevReminders) =>
       prevReminders.filter((_, i) => i !== index)
     );
   };
 
-  // Save all reminders and close the modal
-  const handleSaveReminders = () => {
-    onSave(remindersList); // Send all reminders back to parent
+  const handleSave = () => {
+    // Call the onSave function passed from ReminderApp to update reminders
+    onSave(remindersList);
     onClose(); // Close the modal
   };
 
   return (
     <Modal
-      title={`Add Reminders for ${selectedDate?.format("YYYY-MM-DD")}`}
+      title={`Reminders for ${selectedDate.format("YYYY-MM-DD")}`}
       visible={visible}
-      onOk={handleSaveReminders}
+      onOk={handleSave}
       onCancel={onClose}
     >
       <div>
@@ -61,19 +72,25 @@ const ReminderModal: React.FC<ReminderModalProps> = ({
           placeholder="Enter a reminder"
           value={reminderText}
           onChange={(e) => setReminderText(e.target.value)}
-          onPressEnter={handleAddReminder} // Allow pressing Enter to add a reminder
+          onPressEnter={handleAddReminder} // Allow "Enter" key to add reminder
+        />
+        <Input
+          type="time"
+          onChange={(e) => setReminderTime(moment(e.target.value, "HH:mm"))} // Parse time input
+          className="mt-2"
         />
         <Button className="mt-2" type="primary" onClick={handleAddReminder}>
           Add Reminder
         </Button>
 
-        {/* List of reminders */}
         <ul className="mt-4">
           {remindersList.map((reminder, index) => (
             <li key={index} className="flex justify-between items-center mb-2">
-              <span>{reminder}</span>
+              <span>
+                {reminder.text} - {moment(reminder.time).format("HH:mm")}
+              </span>
               <Button type="link" onClick={() => handleDeleteReminder(index)}>
-                <FontAwesomeIcon icon="fa-solid fa-trash" />
+                <FontAwesomeIcon icon={faTrash} />
               </Button>
             </li>
           ))}

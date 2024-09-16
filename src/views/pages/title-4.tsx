@@ -1,67 +1,114 @@
-import React, { useState } from "react";
-import { Calendar } from "antd";
-import type { Moment } from "moment";
-import ReminderModal from "../../components/ui/ReminderModal"; // Import the updated child component
+import React, { useState, useCallback, useEffect } from "react";
+import { Calendar, notification } from "antd";
+import ReminderModal from "../../components/ui/ReminderModal";
+import moment, { Moment } from "moment";
 
-const Title4 = () => {
-  const [selectedDate, setSelectedDate] = useState<Moment | null>(null); // State to store the selected date
-  const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
-  const [reminders, setReminders] = useState<{ [key: string]: string[] }>({}); // State to store reminders by date
+interface Reminder {
+  text: string;
+  time: number;
+  played?: boolean;
+}
 
-  // Handle the date selection
-  const onDateSelect = (date: any) => {
-    setSelectedDate(date); // Store selected date
-    setIsModalVisible(true); // Show the modal when date is clicked
+interface RemindersMap {
+  [key: string]: Reminder[];
+}
+
+const Title4 = ({ query }: { query: string }) => {
+  const [selectedDate, setSelectedDate] = useState<Moment | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [existingReminders, setExistingReminders] = useState<RemindersMap>({});
+  const [reminderDates, setReminderDates] = useState<Set<string>>(new Set());
+  const [audio] = useState(new Audio("/ringtone.mp3"));
+
+  // Handle date click
+  const onDateClick = (date: any) => {
+    setSelectedDate(date);
+    setIsModalVisible(true);
   };
 
-  // Handle saving multiple reminders for the selected date
-  const handleSaveReminders = (newReminders: string[]) => {
-    if (!selectedDate) return; // Exit if no date is selected
-    const formattedDate = selectedDate.format("YYYY-MM-DD");
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = moment().valueOf();
+      Object.keys(existingReminders).forEach((date) => {
+        existingReminders[date].forEach((reminder) => {
+          if (reminder.time <= now) {
+            audio.play();
+            notification.open({
+              message: "Reminder",
+              description: reminder.text,
+              duration: 5,
+            });
+            setExistingReminders((prev) => {
+              if (!prev[date]) return prev;
+              return {
+                ...prev,
+                [date]: prev[date].filter((r) => r.time > now),
+              };
+            });
+          }
+        });
+      });
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [existingReminders, audio]);
 
-    // Save all reminders for the selected date
-    setReminders((prevReminders) => ({
-      ...prevReminders,
-      [formattedDate]: newReminders, // Replace previous reminders with new ones
-    }));
-  };
+  // Handle save reminders
+  const handleSaveReminders = useCallback(
+    (reminders: Reminder[]) => {
+      if (selectedDate) {
+        const formattedDate = selectedDate.format("YYYY-MM-DD");
+        setExistingReminders((prev) => ({
+          ...prev,
+          [formattedDate]: reminders,
+        }));
+        setReminderDates((dates) => new Set(dates.add(formattedDate)));
+      }
+    },
+    [selectedDate]
+  );
 
-  // Close the modal
   const handleCloseModal = () => {
     setIsModalVisible(false);
   };
 
-  // Get existing reminders for the selected date
-  const getExistingReminders = () => {
-    if (!selectedDate) return [];
-    const formattedDate = selectedDate.format("YYYY-MM-DD");
-    return reminders[formattedDate] || [];
+  const dateCellRender = (value: any) => {
+    const formattedDate = value.format("YYYY-MM-DD");
+
+    if (reminderDates.has(formattedDate)) {
+      const remindersForDate = existingReminders[formattedDate];
+
+      return (
+        <div style={{ backgroundColor: "#ffeb3b", padding: "4px" }}>
+          <ul className="list-disc ml-4">
+            {remindersForDate?.map((reminder, index) => (
+              <li key={index}>
+                {reminder.text} - {moment(reminder.time).format("hh:mm A")}
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold text-gray-700">My Calendar</h1>
-      </div>
-
-      {/* Calendar */}
-      <div className="bg-white shadow rounded-lg p-4">
-        <Calendar
-          fullscreen={false}
-          onSelect={onDateSelect} // Trigger modal on date select
-          className="custom-calendar"
+    <div className="flex-1 justify-center p-8 text-lg">
+      <h1 className="text-4xl font-bold mb-5">Calendar</h1>
+      <Calendar onSelect={onDateClick} dateCellRender={dateCellRender} />
+      {selectedDate && (
+        <ReminderModal
+          visible={isModalVisible}
+          selectedDate={selectedDate}
+          existingReminders={
+            existingReminders[selectedDate.format("YYYY-MM-DD")] || []
+          }
+          onClose={handleCloseModal}
+          onSave={handleSaveReminders}
+          audio={audio} // Pass audio instance
         />
-      </div>
-
-      {/* Modal for adding reminders */}
-      <ReminderModal
-        visible={isModalVisible}
-        selectedDate={selectedDate}
-        existingReminders={getExistingReminders()} // Pass existing reminders to modal
-        onClose={handleCloseModal}
-        onSave={handleSaveReminders} // Handle saving multiple reminders
-      />
+      )}
     </div>
   );
 };

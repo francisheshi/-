@@ -85,7 +85,10 @@ const App = () => {
                   path="/pages/page-3"
                   element={<Title3 query={query} data={objContent} />}
                 />
-                <Route path="/pages/page-4" element={<Title4 />} />
+                <Route
+                  path="/pages/page-4"
+                  element={<Title4 query={query} />}
+                />
               </Routes>
             </div>
           </div>
