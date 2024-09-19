@@ -5,13 +5,15 @@ import moment, { Moment } from "moment";
 
 interface Reminder {
   text: string;
-  time: number; // Unix timestamp
+  time: number;
+  completedAt?: string;
 }
 
 interface ReminderAppProps {
   selectedDate: Moment | any;
 }
 
+// ReminderApp.tsx
 const ReminderApp: React.FC<ReminderAppProps> = ({ selectedDate }) => {
   const [existingReminders, setExistingReminders] = useState<Reminder[]>([]);
   const [reminderModalVisible, setReminderModalVisible] = useState(false);
@@ -47,6 +49,7 @@ const ReminderApp: React.FC<ReminderAppProps> = ({ selectedDate }) => {
   return (
     <div>
       <Button onClick={openReminderModal}>Add Reminders</Button>
+
       <ReminderModal
         visible={reminderModalVisible}
         selectedDate={selectedDate}

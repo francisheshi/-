@@ -6,7 +6,8 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 interface Reminder {
   text: string;
-  time: any; // Unix timestamp
+  time: any; // Reminder set time
+  completedAt?: string; // Optional completion time
 }
 
 interface ReminderModalProps {
@@ -24,13 +25,13 @@ const ReminderModal: React.FC<ReminderModalProps> = ({
   existingReminders,
   onClose,
   onSave,
+  audio,
 }) => {
   const [reminderText, setReminderText] = useState("");
   const [reminderTime, setReminderTime] = useState<Moment | null>(null);
   const [remindersList, setRemindersList] = useState<Reminder[]>([]);
 
   useEffect(() => {
-    // Set reminders when modal is opened
     if (visible) {
       setRemindersList(existingReminders);
     }
@@ -55,7 +56,6 @@ const ReminderModal: React.FC<ReminderModalProps> = ({
   };
 
   const handleSave = () => {
-    // Call the onSave function passed from ReminderApp to update reminders
     onSave(remindersList);
     onClose(); // Close the modal
   };

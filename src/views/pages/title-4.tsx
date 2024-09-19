@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Calendar, notification } from "antd";
 import ReminderModal from "../../components/ui/ReminderModal";
 import moment, { Moment } from "moment";
+import { CalendarMode } from "antd/es/calendar/generateCalendar";
 
 interface Reminder {
   text: string;
@@ -52,7 +53,6 @@ const Title4 = ({ query }: { query: string }) => {
     return () => clearInterval(interval);
   }, [existingReminders, audio]);
 
-  // Handle save reminders
   const handleSaveReminders = useCallback(
     (reminders: Reminder[]) => {
       if (selectedDate) {
@@ -75,19 +75,32 @@ const Title4 = ({ query }: { query: string }) => {
     const formattedDate = value.format("YYYY-MM-DD");
 
     if (reminderDates.has(formattedDate)) {
-      const remindersForDate = existingReminders[formattedDate];
+      const remindersForDate = existingReminders[formattedDate] || [];
 
-      return (
-        <div style={{ backgroundColor: "#ffeb3b", padding: "4px" }}>
-          <ul className="list-disc ml-4">
-            {remindersForDate?.map((reminder, index) => (
-              <li key={index}>
-                {reminder.text} - {moment(reminder.time).format("hh:mm A")}
-              </li>
-            ))}
-          </ul>
-        </div>
-      );
+      if (remindersForDate.length > 0) {
+        const sortedReminders = remindersForDate
+          .filter((reminder) => moment(reminder.time).isValid())
+          .sort((a, b) => moment(a.time).diff(moment(b.time)));
+
+        return (
+          <div className="bg-yellow-300 p-2">
+            <ul className="list-disc ml-4">
+              {sortedReminders.map((reminder, index) => (
+                <li
+                  key={index}
+                  className={
+                    moment(reminder.time).isSameOrBefore(moment())
+                      ? "font-bold"
+                      : ""
+                  }
+                >
+                  {reminder.text} - {moment(reminder.time).format("hh:mm A")}
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
     }
 
     return null;
@@ -106,7 +119,7 @@ const Title4 = ({ query }: { query: string }) => {
           }
           onClose={handleCloseModal}
           onSave={handleSaveReminders}
-          audio={audio} // Pass audio instance
+          audio={audio}
         />
       )}
     </div>
