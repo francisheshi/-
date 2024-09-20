@@ -66,6 +66,18 @@ const SideBar = () => {
               </NavLink>
             </Button>
           </Menu.Item>
+          <Menu.Item key="5">
+            <Button
+              className="rounded-md shadow-lg bg-blue-500 hover:bg-blue-600"
+              type="primary"
+              size="large"
+              block
+            >
+              <NavLink to="/pages/profile" className="text-white">
+                Profile
+              </NavLink>
+            </Button>
+          </Menu.Item>
         </Menu>
       </div>
     </div>

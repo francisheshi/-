@@ -99,6 +99,17 @@ const NavBar: FC = () => {
               </NavLink>
             </Button>
           </Menu.Item>
+          <Menu.Item key="5">
+            <Button
+              type="primary"
+              size="large"
+              className="rounded-md bg-blue-500 duration-500 ease-in-out hover:-translate-y-2 items-center"
+            >
+              <NavLink to="/pages/profile" className="text-white">
+                Profile
+              </NavLink>
+            </Button>
+          </Menu.Item>
         </Menu>
         <div className="flex items-center px-128 justify-end">
           <Search
