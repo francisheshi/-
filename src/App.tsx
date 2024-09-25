@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import SideBar from "./components/menu/sidebar";
 import Title1 from "./views/pages/title-1";
 import Title2 from "./views/pages/title-2";
@@ -8,11 +8,18 @@ import { useSearch } from "./context/SearchContext";
 import Title3 from "./views/pages/title-3";
 import Title4 from "./views/pages/title-4";
 import Profile from "./views/pages/Profile";
+import Login from "./views/login/page";
+import Register from "./views/register/page";
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userCredentials, setUserCredentials] = useState<
+    { username: string; password: string }[]
+  >([]); // Store user credentials dynamically
+  const navigate = useNavigate();
   const { query } = useSearch();
 
-  const [objContent] = useState([
+  const objContent = [
     {
       id: 1,
       name: "John",
@@ -63,42 +70,84 @@ const App = () => {
       numberCode: "+39",
       isoCountryCodes: "Ita",
     },
-  ]);
+  ];
+
+  const handleLogin = (username: string, password: string) => {
+    const user = userCredentials.find(
+      (u) => u.username === username && u.password === password
+    );
+
+    if (user) {
+      setIsAuthenticated(true);
+      navigate("/pages/page-1"); // Navigate to page-1 after successful login
+    } else {
+      // Show an error or redirect to the register page
+      navigate("/register"); // Redirect to register if user doesn't exist
+    }
+  };
+
+  const handleRegister = (username: string, password: string) => {
+    // Check if the user already exists
+    const userExists = userCredentials.some((u) => u.username === username);
+    if (!userExists) {
+      setUserCredentials((prev) => [...prev, { username, password }]);
+      setIsAuthenticated(true);
+      navigate("/pages/page-1"); // Navigate to page-1 after registration
+    } else {
+      alert("Username already exists!"); // Handle existing user case
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+  };
+
   return (
     <div className="App">
-      <Layout>
-        <main className="flex flex-row md:flex-row min-h-screen mt-14 text-start">
-          <aside className="w-full md:w-64 bg-gray-800 text-center fixed top-32 bottom-1 p-1">
-            <SideBar />
-          </aside>
-          <div className="flex-1 ml-0 md:ml-64 md:mt-0 p-5 bg-gray-100 pt-10">
-            <div className="h-full flex flex-col">
-              <Routes>
-                <Route
-                  path="/pages/page-1"
-                  element={<Title1 query={query} />}
-                />
-                <Route
-                  path="/pages/page-2"
-                  element={<Title2 query={query} />}
-                />
-                <Route
-                  path="/pages/page-3"
-                  element={<Title3 query={query} data={objContent} />}
-                />
-                <Route
-                  path="/pages/page-4"
-                  element={<Title4 query={query} />}
-                />
-                <Route
-                  path="/pages/profile"
-                  element={<Profile query={query} />}
-                />
-              </Routes>
+      {isAuthenticated ? (
+        <Layout logout={handleLogout}>
+          <main className="flex flex-row md:flex-row min-h-screen mt-14 text-start">
+            <aside className="w-full md:w-64 bg-gray-800 text-center fixed top-32 bottom-1 p-1">
+              <SideBar />
+            </aside>
+            <div className="flex-1 ml-0 md:ml-64 md:mt-0 p-5 bg-gray-100 pt-10">
+              <div className="h-full flex flex-col">
+                <Routes>
+                  <Route
+                    path="/pages/page-1"
+                    element={<Title1 query={query} />}
+                  />
+                  <Route
+                    path="/pages/page-2"
+                    element={<Title2 query={query} />}
+                  />
+                  <Route
+                    path="/pages/page-3"
+                    element={<Title3 query={query} data={objContent} />}
+                  />
+                  <Route
+                    path="/pages/page-4"
+                    element={<Title4 query={query} />}
+                  />
+                  <Route
+                    path="/pages/profile"
+                    element={<Profile query={query} />}
+                  />
+                </Routes>
+              </div>
             </div>
-          </div>
-        </main>
-      </Layout>
+          </main>
+        </Layout>
+      ) : (
+        <Routes>
+          <Route path="/" element={<Login onLogin={handleLogin} />} />
+          <Route
+            path="/register"
+            element={<Register onRegister={handleRegister} />}
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      )}
     </div>
   );
 };
