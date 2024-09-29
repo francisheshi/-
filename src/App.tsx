@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import SideBar from "./components/menu/sidebar";
 import Title1 from "./views/pages/title-1";
@@ -13,9 +13,6 @@ import Register from "./views/register/page";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userCredentials, setUserCredentials] = useState<
-    { username: string; password: string }[]
-  >([]); // Store user credentials dynamically
   const navigate = useNavigate();
   const { query } = useSearch();
 
@@ -73,34 +70,74 @@ const App = () => {
   ];
 
   const handleLogin = (username: string, password: string) => {
-    const user = userCredentials.find(
-      (u) => u.username === username && u.password === password
+    const storedUsers = JSON.parse(
+      localStorage.getItem("userCredentials") || "[]"
     );
 
-    if (user) {
-      setIsAuthenticated(true);
-      navigate("/pages/page-1"); // Navigate to page-1 after successful login
+    const foundUser = storedUsers.find(
+      (u: any) => u.username === username && u.password === password
+    );
+
+    if (foundUser) {
+      setIsAuthenticated(true); // Update context/state
+      navigate("/pages/page-1");
+      console.log("User logged in successfully:", foundUser);
     } else {
-      // Show an error or redirect to the register page
-      navigate("/register"); // Redirect to register if user doesn't exist
+      alert("Invalid username or password. Please try again.");
     }
   };
 
-  const handleRegister = (username: string, password: string) => {
-    // Check if the user already exists
-    const userExists = userCredentials.some((u) => u.username === username);
+  const handleRegister = (
+    username: string,
+    email: string,
+    password: string,
+    name: string,
+    surname: string,
+    age: number,
+    city: string,
+    country: string
+  ) => {
+    const storedUsers = JSON.parse(
+      localStorage.getItem("userCredentials") || "[]"
+    );
+    const userExists = storedUsers.some((u: any) => u.username === username);
+
     if (!userExists) {
-      setUserCredentials((prev) => [...prev, { username, password }]);
-      setIsAuthenticated(true);
-      navigate("/pages/page-1"); // Navigate to page-1 after registration
+      const newUser = {
+        username,
+        email,
+        password,
+        name,
+        surname,
+        age,
+        city,
+        country,
+      };
+      const updatedUsers = [...storedUsers, newUser];
+      localStorage.setItem("userCredentials", JSON.stringify(updatedUsers));
+      setIsAuthenticated(true); // Update context/state
+      navigate("/pages/page-1");
+      console.log("User registered successfully:", newUser);
     } else {
-      alert("Username already exists!"); // Handle existing user case
+      alert("Username already exists. Please choose another one.");
     }
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
   };
+
+  useEffect(() => {
+    const storedUsers = JSON.parse(
+      localStorage.getItem("userCredentials") || "[]"
+    );
+    const storedUser = localStorage.getItem("currentUser");
+
+    if (storedUser) {
+      setIsAuthenticated(true);
+      navigate("/pages/page-1");
+    }
+  }, []);
 
   return (
     <div className="App">

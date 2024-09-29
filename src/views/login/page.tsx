@@ -10,6 +10,7 @@ import {
   CardContent,
 } from "@mui/material";
 import { motion } from "framer-motion";
+import useAuth from "../../context/AuthContext";
 
 const Login = ({
   onLogin,
@@ -22,6 +23,7 @@ const Login = ({
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,8 +33,11 @@ const Login = ({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const isAuthenticated = onLogin(credentials.username, credentials.password);
+
     if (isAuthenticated) {
       setError("");
+      // Call login from useAuth
+      login({ username: credentials.username }); // Pass user data as needed
       navigate("/pages/page-1");
     } else {
       setError("Invalid username or password");

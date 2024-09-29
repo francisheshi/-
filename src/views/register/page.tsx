@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -13,10 +13,19 @@ import { motion } from "framer-motion";
 const Register = ({
   onRegister,
 }: {
-  onRegister: (username: string, password: string) => void;
+  onRegister: (
+    username: string,
+    email: string,
+    password: string,
+    name: string,
+    surname: string,
+    age: number,
+    city: string,
+    country: string
+  ) => void;
 }) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [age, setAge] = useState<number | string>(0);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -30,44 +39,51 @@ const Register = ({
   });
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: name === "age" ? value : value,
-    }));
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-  };
+  // Use refs for form fields
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const surnameRef = useRef<HTMLInputElement>(null);
+  const ageRef = useRef<HTMLInputElement>(null);
+  const cityRef = useRef<HTMLInputElement>(null);
+  const countryRef = useRef<HTMLInputElement>(null);
 
+  // Validate form inputs
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
-    if (!formData.username) newErrors.username = "Username is required";
-    if (!formData.email) newErrors.email = "Email is required";
-    if (!formData.password) newErrors.password = "Password is required";
-    if (!formData.confirm) {
-      newErrors.confirm = "Confirming password is required";
-    } else if (formData.password !== formData.confirm) {
-      newErrors.confirm = "Passwords do not match";
-    }
-    if (!formData.name) newErrors.name = "Name is required";
-    if (!formData.surname) newErrors.surname = "Surname is required";
-    if (!formData.age) {
-      newErrors.age = "Age is required";
-    } else if (isNaN(Number(formData.age)) || Number(formData.age) <= 0) {
+
+    if (!usernameRef.current?.value)
+      newErrors.username = "Username is required";
+    if (!emailRef.current?.value) newErrors.email = "Email is required";
+    if (!passwordRef.current?.value)
+      newErrors.password = "Password is required";
+    if (!nameRef.current?.value) newErrors.name = "Name is required";
+    if (!surnameRef.current?.value) newErrors.surname = "Surname is required";
+    if (!ageRef.current?.value || Number(ageRef.current?.value) <= 0) {
       newErrors.age = "Age must be a positive number";
     }
-    if (!formData.city) newErrors.city = "City is required";
-    if (!formData.country) newErrors.country = "Country is required";
+    if (!cityRef.current?.value) newErrors.city = "City is required";
+    if (!countryRef.current?.value) newErrors.country = "Country is required";
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // Return true if there are no errors
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      onRegister(formData.username, formData.password);
-      navigate("/pages/page-1"); // Redirect to a page after registration
+      onRegister(
+        formData.username,
+        formData.password,
+        formData.email,
+        formData.name,
+        formData.surname,
+        formData.age,
+        formData.city,
+        formData.country
+      );
+      navigate("/pages/page-1", { state: { formData } }); // Redirect to a page after registration
     }
   };
 
@@ -94,17 +110,16 @@ const Register = ({
           </NavLink>
         </Typography>
         <Box
-          onSubmit={handleSubmit}
           className="space-y-6 p-12"
+          onSubmit={handleSubmit}
           component="form"
           noValidate
         >
           <div className="flex justify-between">
             <TextField
               helperText={errors.username}
-              value={formData.username}
-              onChange={handleChange}
               error={!!errors.username}
+              inputRef={usernameRef}
               variant="outlined"
               label="Username"
               name="username"
@@ -112,9 +127,8 @@ const Register = ({
             />
             <TextField
               helperText={errors.email}
-              onChange={handleChange}
               error={!!errors.email}
-              value={formData.email}
+              inputRef={emailRef}
               variant="outlined"
               label="Email"
               name="email"
@@ -124,22 +138,10 @@ const Register = ({
           <div className="flex justify-between">
             <TextField
               helperText={errors.password}
-              value={formData.password}
               error={!!errors.password}
-              onChange={handleChange}
+              inputRef={passwordRef}
               variant="outlined"
               label="Password"
-              name="password"
-              type="password"
-              required
-            />
-            <TextField
-              helperText={errors.confirm}
-              value={formData.confirm}
-              error={!!errors.confirm}
-              onChange={handleChange}
-              variant="outlined"
-              label="Confirm password"
               name="password"
               type="password"
               required
@@ -148,9 +150,8 @@ const Register = ({
           <div className="flex justify-between">
             <TextField
               helperText={errors.name}
-              onChange={handleChange}
-              value={formData.name}
               error={!!errors.name}
+              inputRef={nameRef}
               variant="outlined"
               label="Name"
               name="name"
@@ -159,8 +160,7 @@ const Register = ({
             <TextField
               helperText={errors.surname}
               error={!!errors.surname}
-              value={formData.surname}
-              onChange={handleChange}
+              inputRef={surnameRef}
               variant="outlined"
               label="Surname"
               name="surname"
@@ -170,20 +170,20 @@ const Register = ({
           <TextField
             id="age"
             InputProps={{ inputProps: { min: 0 } }}
-            onChange={handleChange}
-            variant="outlined"
+            helperText={errors.age}
+            error={!!errors.age}
             className="w-[15%]"
+            variant="outlined"
+            inputRef={ageRef}
             type="number"
             label="Age"
-            value={age}
             required
           />
           <div className="flex justify-between">
             <TextField
               helperText={errors.city}
-              onChange={handleChange}
-              value={formData.city}
               error={!!errors.city}
+              inputRef={cityRef}
               variant="outlined"
               label="City"
               name="city"
@@ -191,9 +191,8 @@ const Register = ({
             />
             <TextField
               helperText={errors.country}
-              value={formData.country}
               error={!!errors.country}
-              onChange={handleChange}
+              inputRef={countryRef}
               variant="outlined"
               label="Country"
               name="country"
@@ -203,10 +202,11 @@ const Register = ({
           <Button
             className="w-full py-2"
             variant="contained"
+            disabled={loading}
             color="primary"
             type="submit"
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </Button>
         </Box>
       </Card>

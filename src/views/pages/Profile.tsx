@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Card } from "@tremor/react";
 import {
   Avatar,
+  Button,
   IconButton,
   InputAdornment,
   Menu,
@@ -19,55 +20,78 @@ import {
   Transgender,
   Cancel,
 } from "@mui/icons-material";
+import { useLocation } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
 const options = ["Update Details", "Update Avatar"];
 
 const Profile = ({ query }: { query: string }) => {
+  const location = useLocation();
+  const newUser = location.state?.newUser || {}; // Get the new user data from registration.
+
+  // Refs for user fields
+  const fullNameRef = useRef<HTMLInputElement | null>(null);
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const ageRef = useRef<HTMLInputElement | null>(null);
+  const roleRef = useRef<HTMLSelectElement | null>(null);
+  const statusRef = useRef<HTMLSelectElement | null>(null);
+  const genderRef = useRef<HTMLSelectElement | null>(null);
+  const [avatarText, setAvatarText] = useState(
+    `${newUser.name?.charAt(0) || "F"}.${newUser.surname?.charAt(0) || "S"}.`
+  );
+  const [editableFields, setEditableFields] = useState({
+    fullName: false, // Set to false for disabled by default
+    email: false,
+    age: false,
+    role: false,
+    status: false,
+    gender: false,
+  });
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [avatarText, setAvatarText] = useState("F.Sh.");
-  const [editable, setEditable] = useState(false);
-  const [gender, setGender] = useState("");
-  const [status, setStatus] = useState("");
-  const [fullName, setFullName] = useState("Write your name...");
-  const [email, setEmail] = useState("Type in your email...");
-  const [role, setRole] = useState("");
-  const [age, setAge] = useState<number | string>(0);
   const open = Boolean(anchorEl);
   const avatarSize = 75;
 
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFullName(event.target.value);
+  const handleSubmit = () => {
+    // Save changes using refs
+    const updatedProfile = {
+      fullName: fullNameRef.current?.value,
+      email: emailRef.current?.value,
+      age: Number(ageRef.current?.value),
+      role: roleRef.current?.value,
+      status: statusRef.current?.value,
+      gender: genderRef.current?.value,
+    };
+
+    console.log("Updated Profile:", updatedProfile);
+
+    // Disable edited fields
+    setEditableFields((prev) => ({
+      ...prev,
+      fullName: false,
+      email: false,
+      age: false,
+      role: false,
+      status: false,
+      gender: false,
+    }));
   };
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-
-  const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRole(event.target.value);
-  };
-
-  const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGender(event.target.value);
-  };
-
-  const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStatus(event.target.value);
-  };
-
-  const handleAgeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setAge(value === "" ? "" : Number(value)); // Convert to number or keep as empty string
+  const handleEditToggle = () => {
+    setEditableFields((prev) => ({
+      ...prev,
+      fullName: true,
+      email: true,
+      age: true,
+      role: true,
+      status: true,
+      gender: true,
+    }));
+    handleClose();
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleEditToggle = () => {
-    setEditable(!editable);
-    handleClose();
   };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -87,7 +111,7 @@ const Profile = ({ query }: { query: string }) => {
     }
   };
 
-  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -103,7 +127,6 @@ const Profile = ({ query }: { query: string }) => {
   return (
     <div className="flex-1 p-10 text-lg">
       <CardTitle className="text-[34px]">My Profile</CardTitle>
-
       <div className="grid place-items-center h-[85vh] mb-2">
         <Card className="shadow-lg rounded-2xl">
           <div className="justify-between flex">
@@ -149,11 +172,11 @@ const Profile = ({ query }: { query: string }) => {
             <div>
               <div className="flex justify-start text-center mt-11 ml-16">
                 <input
-                  accept="image/*"
+                  onChange={handleAvatarChange}
                   style={{ display: "none" }}
                   id="avatar-upload"
+                  accept="image/*"
                   type="file"
-                  onChange={handleAvatarChange}
                 />
                 <Avatar
                   src={
@@ -161,55 +184,59 @@ const Profile = ({ query }: { query: string }) => {
                       ? avatarText
                       : undefined
                   }
-                  className="bg-purple-500"
                   style={{ height: avatarSize, width: avatarSize }}
+                  className="bg-purple-500"
                 >
-                  {!avatarText.startsWith("data:image/") && "F.Sh."}
+                  {!avatarText.startsWith("data:image/") &&
+                    `${newUser.name?.charAt(0) || "F"}.${
+                      newUser.surname?.charAt(0) || "S"
+                    }`}
                 </Avatar>
               </div>
 
               <div className="flex justify-between text-center mt-4 mb-11">
                 <TextField
-                  id="full-name"
-                  onChange={handleNameChange}
-                  disabled={!editable}
-                  variant="outlined"
+                  inputRef={fullNameRef}
+                  defaultValue={`${newUser.name || ""} ${
+                    newUser.surname || ""
+                  }`}
+                  disabled={!editableFields.fullName}
                   className="w-[15%]"
+                  variant="outlined"
                   label="Full Name"
-                  value={fullName}
+                  id="full-name"
                   required
                 />
 
                 <TextField
-                  id="age"
+                  inputRef={ageRef}
                   InputProps={{ inputProps: { min: 0 } }}
-                  onChange={handleAgeChange}
-                  disabled={!editable}
-                  variant="outlined"
+                  defaultValue={newUser.age || 0}
+                  disabled={!editableFields.age}
                   className="w-[15%]"
-                  type="number"
+                  variant="outlined"
                   label="Age"
-                  value={age}
+                  id="age"
                   required
                 />
 
                 <TextField
-                  id="status"
-                  onChange={handleStatusChange}
-                  disabled={!editable}
-                  variant="outlined"
+                  inputRef={statusRef}
+                  defaultValue={newUser.status || ""}
+                  disabled={!editableFields.status}
                   className="w-[15%]"
+                  variant="outlined"
                   label="Status"
-                  value={status}
+                  id="status"
                   required
                   select
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        {status === "active" && (
+                        {statusRef.current?.value === "active" && (
                           <CheckCircle className="text-green-500" />
                         )}
-                        {status === "inactive" && (
+                        {statusRef.current?.value === "inactive" && (
                           <Cancel className="text-blue-500" />
                         )}
                       </InputAdornment>
@@ -224,36 +251,64 @@ const Profile = ({ query }: { query: string }) => {
 
             <div className="flex justify-between text-center mt-4 mb-11">
               <TextField
-                id="email"
-                onChange={handleEmailChange}
-                disabled={!editable}
-                defaultValue="Enter email"
-                variant="outlined"
+                inputRef={emailRef}
+                defaultValue={newUser.email || ""}
+                disabled={!editableFields.email}
                 className="w-[15%]"
+                variant="outlined"
                 label="Email"
-                value={email}
+                id="email"
                 type="email"
                 required
               />
 
               <TextField
-                id="gender"
-                onChange={handleGenderChange}
-                disabled={!editable}
-                variant="outlined"
+                inputRef={roleRef}
+                defaultValue={newUser.role || ""}
+                disabled={!editableFields.role}
                 className="w-[15%]"
-                label="Gender"
-                value={gender}
+                variant="outlined"
+                label="Role"
+                id="role"
                 required
                 select
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      {gender === "male" && <Male className="text-blue-500" />}
-                      {gender === "female" && (
+                      {roleRef.current?.value === "admin" && (
+                        <SupervisorAccount className="text-blue-500" />
+                      )}
+                      {roleRef.current?.value === "user" && (
+                        <Shield className="text-yellow-500" />
+                      )}
+                    </InputAdornment>
+                  ),
+                }}
+              >
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="user">User</MenuItem>
+              </TextField>
+
+              <TextField
+                inputRef={genderRef}
+                defaultValue={newUser.gender || ""}
+                disabled={!editableFields.gender}
+                className="w-[15%]"
+                variant="outlined"
+                label="Gender"
+                id="gender"
+                required
+                select
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      {genderRef.current?.value === "male" && (
+                        <Male className="text-blue-500" />
+                      )}
+                      {genderRef.current?.value === "female" && (
                         <Female className="text-pink-500" />
                       )}
-                      {gender === "other" && (
+                      {genderRef.current?.value === "other" && (
                         <Transgender className="text-purple-500" />
                       )}
                     </InputAdornment>
@@ -264,38 +319,15 @@ const Profile = ({ query }: { query: string }) => {
                 <MenuItem value="female">Female</MenuItem>
                 <MenuItem value="other">Other</MenuItem>
               </TextField>
-
-              <TextField
-                id="role"
-                onChange={handleRoleChange}
-                disabled={!editable}
-                variant="outlined"
-                className="w-[15%]"
-                label="Roles"
-                value={role}
-                required
-                select
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      {role === "admin" && (
-                        <Shield className="text-green-500" />
-                      )}
-                      {role === "editor" && (
-                        <SupervisorAccount className="text-blue-500" />
-                      )}
-                      {role === "viewer" && (
-                        <Visibility className="text-gray-500" />
-                      )}
-                    </InputAdornment>
-                  ),
-                }}
-              >
-                <MenuItem value="admin">Admin</MenuItem>
-                <MenuItem value="editor">Editor</MenuItem>
-                <MenuItem value="viewer">Viewer</MenuItem>
-              </TextField>
             </div>
+
+            <Button
+              onClick={handleSubmit}
+              className="bg-blue-500 text-white mt-4"
+              variant="contained"
+            >
+              Save Changes
+            </Button>
           </CardDescription>
         </Card>
       </div>
