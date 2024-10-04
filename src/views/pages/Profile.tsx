@@ -138,7 +138,11 @@ const Profile = ({ query }: { query: string }) => {
         setUserData(user);
       }
     }
-  }, []);
+    const initials = `${userData?.name?.charAt(0) || "F"}.${
+      userData?.surname?.charAt(0) || "S"
+    }.`;
+    setAvatarText(initials);
+  }, [userData]);
 
   return (
     <div className="flex-1 p-10 text-lg">
@@ -204,10 +208,7 @@ const Profile = ({ query }: { query: string }) => {
                     style={{ height: avatarSize, width: avatarSize }}
                     className="bg-purple-500"
                   >
-                    {!avatarText.startsWith("data:image/") &&
-                      `${newUser.name?.charAt(0) || "F"}.${
-                        newUser.surname?.charAt(0) || "S"
-                      }`}
+                    {!avatarText.startsWith("data:image/") && avatarText}
                   </Avatar>
                 </div>
 
@@ -230,7 +231,7 @@ const Profile = ({ query }: { query: string }) => {
                     inputRef={ageRef}
                     InputProps={{ inputProps: { min: 0 } }}
                     defaultValue={newUser.age || 0}
-                    value={newUser.age}
+                    value={userData.age}
                     disabled={!editableFields.age}
                     className="w-[15%]"
                     variant="outlined"
