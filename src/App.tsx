@@ -79,7 +79,7 @@ const App = () => {
     );
 
     if (foundUser) {
-      setIsAuthenticated(true); // Update context/state
+      setIsAuthenticated(true);
       navigate("/pages/page-1");
       console.log("User logged in successfully:", foundUser);
     } else {
@@ -115,7 +115,7 @@ const App = () => {
       };
       const updatedUsers = [...storedUsers, newUser];
       localStorage.setItem("userCredentials", JSON.stringify(updatedUsers));
-      setIsAuthenticated(true); // Update context/state
+      setIsAuthenticated(true);
       navigate("/pages/page-1");
       console.log("User registered successfully:", newUser);
     } else {

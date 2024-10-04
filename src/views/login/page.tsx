@@ -36,8 +36,7 @@ const Login = ({
 
     if (isAuthenticated) {
       setError("");
-      // Call login from useAuth
-      login({ username: credentials.username }); // Pass user data as needed
+      login({ username: credentials.username });
       navigate("/pages/page-1");
     } else {
       setError("Invalid username or password");

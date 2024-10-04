@@ -14,7 +14,6 @@ import { CheckCircle } from "lucide-react";
 import {
   Shield,
   SupervisorAccount,
-  Visibility,
   Male,
   Female,
   Transgender,
@@ -27,9 +26,8 @@ const options = ["Update Details", "Update Avatar"];
 
 const Profile = ({ query }: { query: string }) => {
   const location = useLocation();
-  const newUser = location.state?.newUser || {}; // Get the new user data from registration.
+  const newUser = location.state?.newUser || {};
 
-  // Refs for user fields
   const fullNameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const ageRef = useRef<HTMLInputElement | null>(null);
@@ -40,7 +38,7 @@ const Profile = ({ query }: { query: string }) => {
     `${newUser.name?.charAt(0) || "F"}.${newUser.surname?.charAt(0) || "S"}.`
   );
   const [editableFields, setEditableFields] = useState({
-    fullName: false, // Set to false for disabled by default
+    fullName: false,
     email: false,
     age: false,
     role: false,
@@ -49,11 +47,11 @@ const Profile = ({ query }: { query: string }) => {
   });
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [saveEnabled, setSaveEnabled] = useState(false);
   const open = Boolean(anchorEl);
   const avatarSize = 75;
 
   const handleSubmit = () => {
-    // Save changes using refs
     const updatedProfile = {
       fullName: fullNameRef.current?.value,
       email: emailRef.current?.value,
@@ -65,7 +63,6 @@ const Profile = ({ query }: { query: string }) => {
 
     console.log("Updated Profile:", updatedProfile);
 
-    // Disable edited fields
     setEditableFields((prev) => ({
       ...prev,
       fullName: false,
@@ -75,6 +72,7 @@ const Profile = ({ query }: { query: string }) => {
       status: false,
       gender: false,
     }));
+    setSaveEnabled(false);
   };
 
   const handleEditToggle = () => {
@@ -87,6 +85,7 @@ const Profile = ({ query }: { query: string }) => {
       status: true,
       gender: true,
     }));
+    setSaveEnabled(true);
     handleClose();
   };
 
@@ -117,9 +116,9 @@ const Profile = ({ query }: { query: string }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result as string;
-        setAvatarText(base64String); // Save the base64 image string as the avatar
+        setAvatarText(base64String);
       };
-      reader.readAsDataURL(file); // Convert the file to base64
+      reader.readAsDataURL(file);
     }
     handleClose();
   };
@@ -323,7 +322,8 @@ const Profile = ({ query }: { query: string }) => {
 
             <Button
               onClick={handleSubmit}
-              className="bg-blue-500 text-white mt-4"
+              disabled={!saveEnabled}
+              className={`${saveEnabled ? "bg-blue-500" : "bg-gray-300"}`}
               variant="contained"
             >
               Save Changes

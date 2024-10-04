@@ -39,7 +39,6 @@ const Register = ({
   });
   const navigate = useNavigate();
 
-  // Use refs for form fields
   const usernameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -49,7 +48,6 @@ const Register = ({
   const cityRef = useRef<HTMLInputElement>(null);
   const countryRef = useRef<HTMLInputElement>(null);
 
-  // Validate form inputs
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
@@ -83,7 +81,7 @@ const Register = ({
         formData.city,
         formData.country
       );
-      navigate("/pages/page-1", { state: { formData } }); // Redirect to a page after registration
+      navigate("/pages/page-1", { state: { formData } });
     }
   };
 
