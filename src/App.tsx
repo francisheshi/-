@@ -69,24 +69,6 @@ const App = () => {
     },
   ];
 
-  const handleLogin = (username: string, password: string) => {
-    const storedUsers = JSON.parse(
-      localStorage.getItem("userCredentials") || "[]"
-    );
-
-    const foundUser = storedUsers.find(
-      (u: any) => u.username === username && u.password === password
-    );
-
-    if (foundUser) {
-      setIsAuthenticated(true);
-      navigate("/pages/page-1");
-      console.log("User logged in successfully:", foundUser);
-    } else {
-      alert("Invalid username or password. Please try again.");
-    }
-  };
-
   const handleRegister = (
     username: string,
     email: string,
@@ -100,7 +82,12 @@ const App = () => {
     const storedUsers = JSON.parse(
       localStorage.getItem("userCredentials") || "[]"
     );
-    const userExists = storedUsers.some((u: any) => u.username === username);
+
+    const userExists = storedUsers.some(
+      (u: any) =>
+        u.username.toLowerCase() === username.toLowerCase() ||
+        u.email.toLowerCase() === email.toLowerCase()
+    );
 
     if (!userExists) {
       const newUser = {
@@ -113,13 +100,32 @@ const App = () => {
         city,
         country,
       };
+
       const updatedUsers = [...storedUsers, newUser];
       localStorage.setItem("userCredentials", JSON.stringify(updatedUsers));
+      localStorage.setItem("currentUser", JSON.stringify(newUser));
+
+      navigate("/profile", { state: { newUser } });
+      setIsAuthenticated(true);
+    }
+  };
+
+  const handleLogin = (username: string, password: string) => {
+    const storedUsers = JSON.parse(
+      localStorage.getItem("userCredentials") || "[]"
+    );
+
+    const foundUser = storedUsers.find(
+      (user: any) => user.username === username && user.password === password
+    );
+
+    if (foundUser) {
+      localStorage.setItem("currentUser", JSON.stringify(foundUser));
+
       setIsAuthenticated(true);
       navigate("/pages/page-1");
-      console.log("User registered successfully:", newUser);
-    } else {
-      alert("Username already exists. Please choose another one.");
+
+      console.log("User logged in successfully: ", foundUser);
     }
   };
 
@@ -137,6 +143,10 @@ const App = () => {
       setIsAuthenticated(true);
       navigate("/pages/page-1");
     }
+
+    const checkIfUserExists = (username: string) => {
+      return storedUsers.some((user: any) => user.username === username);
+    };
   }, []);
 
   return (

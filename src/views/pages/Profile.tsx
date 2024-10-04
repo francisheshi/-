@@ -25,6 +25,7 @@ const ITEM_HEIGHT = 48;
 const options = ["Update Details", "Update Avatar"];
 
 const Profile = ({ query }: { query: string }) => {
+  const [userData, setUserData] = useState<any>(null);
   const location = useLocation();
   const newUser = location.state?.newUser || {};
 
@@ -49,7 +50,7 @@ const Profile = ({ query }: { query: string }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [saveEnabled, setSaveEnabled] = useState(false);
   const open = Boolean(anchorEl);
-  const avatarSize = 75;
+  const avatarSize = 95;
 
   const handleSubmit = () => {
     const updatedProfile = {
@@ -123,214 +124,235 @@ const Profile = ({ query }: { query: string }) => {
     handleClose();
   };
 
+  useEffect(() => {
+    const storedUsers = JSON.parse(
+      localStorage.getItem("userCredentials") || "[]"
+    );
+    const storedUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+
+    if (storedUser) {
+      const user = storedUsers.find(
+        (user: any) => user.username === storedUser.username
+      );
+      if (user) {
+        setUserData(user);
+      }
+    }
+  }, []);
+
   return (
     <div className="flex-1 p-10 text-lg">
       <CardTitle className="text-[34px]">My Profile</CardTitle>
-      <div className="grid place-items-center h-[85vh] mb-2">
-        <Card className="shadow-lg rounded-2xl">
-          <div className="justify-between flex">
-            <CardTitle className="text-[26px]">User Details</CardTitle>
-            <IconButton
-              aria-controls={open ? "long-menu" : undefined}
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-              aria-haspopup="true"
-              aria-label="more"
-              id="long-button"
-            >
-              ...
-            </IconButton>
-            <Menu
-              onClose={handleClose}
-              anchorEl={anchorEl}
-              id="long-menu"
-              MenuListProps={{
-                "aria-labelledby": "long-button",
-              }}
-              open={open}
-              PaperProps={{
-                style: {
-                  maxHeight: ITEM_HEIGHT * 4.5,
-                  width: "20ch",
-                },
-              }}
-            >
-              {options.map((option) => (
-                <MenuItem
-                  onClick={() => handleMenuClick(option)}
-                  selected={option === "Update Details"}
-                  key={option}
-                >
-                  {option}
-                </MenuItem>
-              ))}
-            </Menu>
-          </div>
-          <hr />
-          <CardDescription className="mt-10">
-            <div>
-              <div className="flex justify-start text-center mt-11 ml-16">
-                <input
-                  onChange={handleAvatarChange}
-                  style={{ display: "none" }}
-                  id="avatar-upload"
-                  accept="image/*"
-                  type="file"
-                />
-                <Avatar
-                  src={
-                    avatarText.startsWith("data:image/")
-                      ? avatarText
-                      : undefined
-                  }
-                  style={{ height: avatarSize, width: avatarSize }}
-                  className="bg-purple-500"
-                >
-                  {!avatarText.startsWith("data:image/") &&
-                    `${newUser.name?.charAt(0) || "F"}.${
-                      newUser.surname?.charAt(0) || "S"
+      {userData && (
+        <div className="grid place-items-center h-[85vh] mb-2">
+          <Card className="shadow-lg rounded-2xl">
+            <div className="justify-between flex">
+              <CardTitle className="text-[26px]">User Details</CardTitle>
+              <IconButton
+                aria-controls={open ? "long-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+                aria-haspopup="true"
+                aria-label="more"
+                id="long-button"
+              >
+                ...
+              </IconButton>
+              <Menu
+                onClose={handleClose}
+                anchorEl={anchorEl}
+                id="long-menu"
+                MenuListProps={{
+                  "aria-labelledby": "long-button",
+                }}
+                open={open}
+                PaperProps={{
+                  style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                    width: "20ch",
+                  },
+                }}
+              >
+                {options.map((option) => (
+                  <MenuItem
+                    onClick={() => handleMenuClick(option)}
+                    selected={option === "Update Details"}
+                    key={option}
+                  >
+                    {option}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </div>
+            <hr />
+            <CardDescription className="mt-10">
+              <div>
+                <div className="flex justify-start text-center mt-11 ml-16">
+                  <input
+                    onChange={handleAvatarChange}
+                    style={{ display: "none" }}
+                    id="avatar-upload"
+                    accept="image/*"
+                    type="file"
+                  />
+                  <Avatar
+                    src={
+                      avatarText.startsWith("data:image/")
+                        ? avatarText
+                        : undefined
+                    }
+                    style={{ height: avatarSize, width: avatarSize }}
+                    className="bg-purple-500"
+                  >
+                    {!avatarText.startsWith("data:image/") &&
+                      `${newUser.name?.charAt(0) || "F"}.${
+                        newUser.surname?.charAt(0) || "S"
+                      }`}
+                  </Avatar>
+                </div>
+
+                <div className="flex justify-between text-center mt-4 mb-11">
+                  <TextField
+                    inputRef={fullNameRef}
+                    value={userData.name + " " + userData.surname}
+                    defaultValue={`${newUser.name || ""} ${
+                      newUser.surname || ""
                     }`}
-                </Avatar>
+                    disabled={!editableFields.fullName}
+                    className="w-[15%]"
+                    variant="outlined"
+                    label="Full Name"
+                    id="full-name"
+                    required
+                  />
+
+                  <TextField
+                    inputRef={ageRef}
+                    InputProps={{ inputProps: { min: 0 } }}
+                    defaultValue={newUser.age || 0}
+                    value={newUser.age}
+                    disabled={!editableFields.age}
+                    className="w-[15%]"
+                    variant="outlined"
+                    label="Age"
+                    id="age"
+                    required
+                  />
+
+                  <TextField
+                    inputRef={statusRef}
+                    defaultValue={newUser.status || ""}
+                    disabled={!editableFields.status}
+                    className="w-[15%]"
+                    variant="outlined"
+                    label="Status"
+                    id="status"
+                    required
+                    select
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          {statusRef.current?.value === "active" && (
+                            <CheckCircle className="text-green-500" />
+                          )}
+                          {statusRef.current?.value === "inactive" && (
+                            <Cancel className="text-blue-500" />
+                          )}
+                        </InputAdornment>
+                      ),
+                    }}
+                  >
+                    <MenuItem value="active">Active</MenuItem>
+                    <MenuItem value="inactive">Inactive</MenuItem>
+                  </TextField>
+                </div>
               </div>
 
               <div className="flex justify-between text-center mt-4 mb-11">
                 <TextField
-                  inputRef={fullNameRef}
-                  defaultValue={`${newUser.name || ""} ${
-                    newUser.surname || ""
-                  }`}
-                  disabled={!editableFields.fullName}
+                  inputRef={emailRef}
+                  defaultValue={newUser.email || ""}
+                  value={userData.email}
+                  disabled={!editableFields.email}
                   className="w-[15%]"
                   variant="outlined"
-                  label="Full Name"
-                  id="full-name"
+                  label="Email"
+                  id="email"
+                  type="email"
                   required
                 />
 
                 <TextField
-                  inputRef={ageRef}
-                  InputProps={{ inputProps: { min: 0 } }}
-                  defaultValue={newUser.age || 0}
-                  disabled={!editableFields.age}
+                  inputRef={roleRef}
+                  defaultValue={newUser.role || ""}
+                  disabled={!editableFields.role}
                   className="w-[15%]"
                   variant="outlined"
-                  label="Age"
-                  id="age"
-                  required
-                />
-
-                <TextField
-                  inputRef={statusRef}
-                  defaultValue={newUser.status || ""}
-                  disabled={!editableFields.status}
-                  className="w-[15%]"
-                  variant="outlined"
-                  label="Status"
-                  id="status"
+                  label="Role"
+                  id="role"
                   required
                   select
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        {statusRef.current?.value === "active" && (
-                          <CheckCircle className="text-green-500" />
+                        {roleRef.current?.value === "admin" && (
+                          <SupervisorAccount className="text-blue-500" />
                         )}
-                        {statusRef.current?.value === "inactive" && (
-                          <Cancel className="text-blue-500" />
+                        {roleRef.current?.value === "user" && (
+                          <Shield className="text-yellow-500" />
                         )}
                       </InputAdornment>
                     ),
                   }}
                 >
-                  <MenuItem value="active">Active</MenuItem>
-                  <MenuItem value="inactive">Inactive</MenuItem>
+                  <MenuItem value="admin">Admin</MenuItem>
+                  <MenuItem value="user">User</MenuItem>
+                </TextField>
+
+                <TextField
+                  inputRef={genderRef}
+                  defaultValue={newUser.gender || ""}
+                  disabled={!editableFields.gender}
+                  className="w-[15%]"
+                  variant="outlined"
+                  label="Gender"
+                  id="gender"
+                  required
+                  select
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        {genderRef.current?.value === "male" && (
+                          <Male className="text-blue-500" />
+                        )}
+                        {genderRef.current?.value === "female" && (
+                          <Female className="text-pink-500" />
+                        )}
+                        {genderRef.current?.value === "other" && (
+                          <Transgender className="text-purple-500" />
+                        )}
+                      </InputAdornment>
+                    ),
+                  }}
+                >
+                  <MenuItem value="male">Male</MenuItem>
+                  <MenuItem value="female">Female</MenuItem>
+                  <MenuItem value="other">Other</MenuItem>
                 </TextField>
               </div>
-            </div>
 
-            <div className="flex justify-between text-center mt-4 mb-11">
-              <TextField
-                inputRef={emailRef}
-                defaultValue={newUser.email || ""}
-                disabled={!editableFields.email}
-                className="w-[15%]"
-                variant="outlined"
-                label="Email"
-                id="email"
-                type="email"
-                required
-              />
-
-              <TextField
-                inputRef={roleRef}
-                defaultValue={newUser.role || ""}
-                disabled={!editableFields.role}
-                className="w-[15%]"
-                variant="outlined"
-                label="Role"
-                id="role"
-                required
-                select
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      {roleRef.current?.value === "admin" && (
-                        <SupervisorAccount className="text-blue-500" />
-                      )}
-                      {roleRef.current?.value === "user" && (
-                        <Shield className="text-yellow-500" />
-                      )}
-                    </InputAdornment>
-                  ),
-                }}
+              <Button
+                onClick={handleSubmit}
+                disabled={!saveEnabled}
+                className={`${saveEnabled ? "bg-blue-500" : "bg-gray-300"}`}
+                variant="contained"
               >
-                <MenuItem value="admin">Admin</MenuItem>
-                <MenuItem value="user">User</MenuItem>
-              </TextField>
-
-              <TextField
-                inputRef={genderRef}
-                defaultValue={newUser.gender || ""}
-                disabled={!editableFields.gender}
-                className="w-[15%]"
-                variant="outlined"
-                label="Gender"
-                id="gender"
-                required
-                select
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      {genderRef.current?.value === "male" && (
-                        <Male className="text-blue-500" />
-                      )}
-                      {genderRef.current?.value === "female" && (
-                        <Female className="text-pink-500" />
-                      )}
-                      {genderRef.current?.value === "other" && (
-                        <Transgender className="text-purple-500" />
-                      )}
-                    </InputAdornment>
-                  ),
-                }}
-              >
-                <MenuItem value="male">Male</MenuItem>
-                <MenuItem value="female">Female</MenuItem>
-                <MenuItem value="other">Other</MenuItem>
-              </TextField>
-            </div>
-
-            <Button
-              onClick={handleSubmit}
-              disabled={!saveEnabled}
-              className={`${saveEnabled ? "bg-blue-500" : "bg-gray-300"}`}
-              variant="contained"
-            >
-              Save Changes
-            </Button>
-          </CardDescription>
-        </Card>
-      </div>
+                Save Changes
+              </Button>
+            </CardDescription>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

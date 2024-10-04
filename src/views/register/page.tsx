@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -39,33 +39,28 @@ const Register = ({
   });
   const navigate = useNavigate();
 
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-  const nameRef = useRef<HTMLInputElement>(null);
-  const surnameRef = useRef<HTMLInputElement>(null);
-  const ageRef = useRef<HTMLInputElement>(null);
-  const cityRef = useRef<HTMLInputElement>(null);
-  const countryRef = useRef<HTMLInputElement>(null);
-
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
-    if (!usernameRef.current?.value)
-      newErrors.username = "Username is required";
-    if (!emailRef.current?.value) newErrors.email = "Email is required";
-    if (!passwordRef.current?.value)
-      newErrors.password = "Password is required";
-    if (!nameRef.current?.value) newErrors.name = "Name is required";
-    if (!surnameRef.current?.value) newErrors.surname = "Surname is required";
-    if (!ageRef.current?.value || Number(ageRef.current?.value) <= 0) {
-      newErrors.age = "Age must be a positive number";
-    }
-    if (!cityRef.current?.value) newErrors.city = "City is required";
-    if (!countryRef.current?.value) newErrors.country = "Country is required";
+    if (!formData.username) newErrors.username = "Username is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
+    if (!formData.name) newErrors.name = "Name is required";
+    if (!formData.surname) newErrors.surname = "Surname is required";
+    if (formData.age <= 0) newErrors.age = "Age must be a positive number";
+    if (!formData.city) newErrors.city = "City is required";
+    if (!formData.country) newErrors.country = "Country is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -73,15 +68,15 @@ const Register = ({
     if (validateForm()) {
       onRegister(
         formData.username,
-        formData.password,
         formData.email,
+        formData.password,
         formData.name,
         formData.surname,
         formData.age,
         formData.city,
         formData.country
       );
-      navigate("/pages/page-1", { state: { formData } });
+      navigate("/pages/profile", { state: { formData } });
     }
   };
 
@@ -117,7 +112,8 @@ const Register = ({
             <TextField
               helperText={errors.username}
               error={!!errors.username}
-              inputRef={usernameRef}
+              value={formData.username}
+              onChange={handleChange}
               variant="outlined"
               label="Username"
               name="username"
@@ -126,30 +122,31 @@ const Register = ({
             <TextField
               helperText={errors.email}
               error={!!errors.email}
-              inputRef={emailRef}
+              value={formData.email}
+              onChange={handleChange}
               variant="outlined"
               label="Email"
               name="email"
               required
             />
           </div>
-          <div className="flex justify-between">
-            <TextField
-              helperText={errors.password}
-              error={!!errors.password}
-              inputRef={passwordRef}
-              variant="outlined"
-              label="Password"
-              name="password"
-              type="password"
-              required
-            />
-          </div>
+          <TextField
+            helperText={errors.password}
+            error={!!errors.password}
+            value={formData.password}
+            onChange={handleChange}
+            variant="outlined"
+            label="Password"
+            name="password"
+            type="password"
+            required
+          />
           <div className="flex justify-between">
             <TextField
               helperText={errors.name}
               error={!!errors.name}
-              inputRef={nameRef}
+              value={formData.name}
+              onChange={handleChange}
               variant="outlined"
               label="Name"
               name="name"
@@ -158,7 +155,8 @@ const Register = ({
             <TextField
               helperText={errors.surname}
               error={!!errors.surname}
-              inputRef={surnameRef}
+              value={formData.surname}
+              onChange={handleChange}
               variant="outlined"
               label="Surname"
               name="surname"
@@ -171,17 +169,20 @@ const Register = ({
             helperText={errors.age}
             error={!!errors.age}
             className="w-[15%]"
+            value={formData.age}
+            onChange={handleChange}
             variant="outlined"
-            inputRef={ageRef}
             type="number"
             label="Age"
+            name="age"
             required
           />
           <div className="flex justify-between">
             <TextField
               helperText={errors.city}
               error={!!errors.city}
-              inputRef={cityRef}
+              value={formData.city}
+              onChange={handleChange}
               variant="outlined"
               label="City"
               name="city"
@@ -190,7 +191,8 @@ const Register = ({
             <TextField
               helperText={errors.country}
               error={!!errors.country}
-              inputRef={countryRef}
+              value={formData.country}
+              onChange={handleChange}
               variant="outlined"
               label="Country"
               name="country"
