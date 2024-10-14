@@ -37,7 +37,7 @@ const Login = ({
     if (isAuthenticated) {
       setError("");
       login({ username: credentials.username });
-      navigate("/pages/page-1");
+      navigate("/pages/textareas");
     } else {
       setError("Invalid username or password");
     }

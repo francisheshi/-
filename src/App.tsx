@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import SideBar from "./components/menu/sidebar";
-import Title1 from "./views/pages/title-1";
-import Title2 from "./views/pages/title-2";
+import TextAreas from "./views/pages/TextAreas";
+import Cards from "./views/pages/Cards";
 import Layout from "./components/menu/layout";
 import { useSearch } from "./context/SearchContext";
-import Title3 from "./views/pages/title-3";
-import Title4 from "./views/pages/title-4";
+import Tables from "./views/pages/Tables";
+import Calendar from "./views/pages/Calendar";
 import Profile from "./views/pages/Profile";
 import Login from "./views/login/page";
 import Register from "./views/register/page";
@@ -123,7 +123,7 @@ const App = () => {
       localStorage.setItem("currentUser", JSON.stringify(foundUser));
 
       setIsAuthenticated(true);
-      navigate("/pages/page-1");
+      navigate("/pages/textareas");
 
       console.log("User logged in successfully: ", foundUser);
     }
@@ -141,7 +141,7 @@ const App = () => {
 
     if (storedUser) {
       setIsAuthenticated(true);
-      navigate("/pages/page-1");
+      navigate("/pages/textareas");
     }
 
     const checkIfUserExists = (username: string) => {
@@ -161,20 +161,20 @@ const App = () => {
               <div className="h-full flex flex-col">
                 <Routes>
                   <Route
-                    path="/pages/page-1"
-                    element={<Title1 query={query} />}
+                    path="/pages/textareas"
+                    element={<TextAreas query={query} />}
                   />
                   <Route
-                    path="/pages/page-2"
-                    element={<Title2 query={query} />}
+                    path="/pages/cards"
+                    element={<Cards query={query} />}
                   />
                   <Route
-                    path="/pages/page-3"
-                    element={<Title3 query={query} data={objContent} />}
+                    path="/pages/tables"
+                    element={<Tables query={query} data={objContent} />}
                   />
                   <Route
-                    path="/pages/page-4"
-                    element={<Title4 query={query} />}
+                    path="/pages/calendar"
+                    element={<Calendar query={query} />}
                   />
                   <Route
                     path="/pages/profile"

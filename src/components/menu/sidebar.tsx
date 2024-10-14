@@ -25,7 +25,7 @@ const SideBar = () => {
               size="large"
               block
             >
-              <NavLink to="/pages/page-1" className="text-white">
+              <NavLink to="/pages/textareas" className="text-white">
                 TextAreas
               </NavLink>
             </Button>
@@ -37,7 +37,7 @@ const SideBar = () => {
               size="large"
               block
             >
-              <NavLink to="/pages/page-2" className="text-white">
+              <NavLink to="/pages/cards" className="text-white">
                 Cards
               </NavLink>
             </Button>
@@ -49,7 +49,7 @@ const SideBar = () => {
               size="large"
               block
             >
-              <NavLink to="/pages/page-3" className="text-white">
+              <NavLink to="/pages/tables" className="text-white">
                 Tables
               </NavLink>
             </Button>
@@ -61,7 +61,7 @@ const SideBar = () => {
               size="large"
               block
             >
-              <NavLink to="/pages/page-4" className="text-white">
+              <NavLink to="/pages/calendar" className="text-white">
                 Calendar
               </NavLink>
             </Button>

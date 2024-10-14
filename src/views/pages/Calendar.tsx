@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Calendar, notification } from "antd";
 import ReminderModal from "../../components/ui/ReminderModal";
 import moment, { Moment } from "moment";
-import { CalendarMode } from "antd/es/calendar/generateCalendar";
 
 interface Reminder {
   text: string;

@@ -15,10 +15,11 @@ const NavBar: FC = () => {
   };
 
   const searchToPathMap: { [key: string]: string } = {
-    "page 1": "/pages/page-1",
-    "page 2": "/pages/page-2",
-    "page 3": "/pages/page-3",
-    "page 4": "/pages/page-4",
+    "page 1": "/pages/textareas",
+    "page 2": "/pages/cards",
+    "page 3": "/pages/tables",
+    "page 4": "/pages/calendar",
+    "page 5": "/pages/profile",
   };
 
   const handleSearch = () => {
@@ -61,7 +62,7 @@ const NavBar: FC = () => {
               size="large"
               className="rounded-md bg-blue-500 duration-500 ease-in-out hover:-translate-y-2 items-center"
             >
-              <NavLink to="/pages/page-1" className="text-white">
+              <NavLink to="/pages/textareas" className="text-white">
                 TextAreas
               </NavLink>
             </Button>
@@ -72,7 +73,7 @@ const NavBar: FC = () => {
               size="large"
               className="rounded-md bg-blue-500 duration-500 ease-in-out hover:-translate-y-2 items-center"
             >
-              <NavLink to="/pages/page-2" className="text-white">
+              <NavLink to="/pages/cards" className="text-white">
                 Cards
               </NavLink>
             </Button>
@@ -83,7 +84,7 @@ const NavBar: FC = () => {
               size="large"
               className="rounded-md bg-blue-500 duration-500 ease-in-out hover:-translate-y-2 items-center"
             >
-              <NavLink to="/pages/page-3" className="text-white">
+              <NavLink to="/pages/tables" className="text-white">
                 Tables
               </NavLink>
             </Button>
@@ -94,7 +95,7 @@ const NavBar: FC = () => {
               size="large"
               className="rounded-md bg-blue-500 duration-500 ease-in-out hover:-translate-y-2 items-center"
             >
-              <NavLink to="/pages/page-4" className="text-white">
+              <NavLink to="/pages/calendar" className="text-white">
                 Calendar
               </NavLink>
             </Button>
