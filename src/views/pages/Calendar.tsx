@@ -1,7 +1,8 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, FC } from "react";
 import { Calendar, notification } from "antd";
 import ReminderModal from "../../components/ui/ReminderModal";
 import moment, { Moment } from "moment";
+import { SearchContextProps } from "../../context/SearchContext";
 
 interface Reminder {
   text: string;

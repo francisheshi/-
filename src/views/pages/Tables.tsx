@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FC } from "react";
 import {
   Table,
   TableBody,
@@ -6,13 +6,13 @@ import {
   TableHead,
   TableRow,
 } from "@tremor/react";
-import { useNavigate } from "react-router-dom";
 import PaginationTable from "../../components/ui/PaginationTable";
-
+import { QueryItem } from "../../context/SearchContext";
+import { useNavigate } from "react-router-dom";
 import "../../styles/pages-style.css";
 import { Button } from "antd";
 
-const Title3 = ({ query, data }: { query: string; data: any[] }) => {
+const Tables = ({ query, data }: { query: string; data: any[] }) => {
   const navigate = useNavigate();
 
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
@@ -39,17 +39,12 @@ const Title3 = ({ query, data }: { query: string; data: any[] }) => {
     setCurrentPage(1); // Reset to first page after rows per page change
   };
 
-  // Function to toggle the table visibility
-  const [expandedItems, setExpandedItems] = useState<boolean[]>(
-    new Array(data.length).fill(false)
-  );
-
   const collapse = () => {
     setIsTableVisible((prevState) => !prevState);
   };
 
   // Filter content based on query
-  const filteredContent = data.filter((item) => {
+  const filteredContent = data.filter((item: any) => {
     const itemIdString = item.id.toString();
     return (
       Number(itemIdString.replace(/\.$/, "")) ===
@@ -67,7 +62,7 @@ const Title3 = ({ query, data }: { query: string; data: any[] }) => {
     <div className="flex-1 p-10 text-lg">
       <h1 className="text-4xl font-bold mb-8">Table</h1>
       {filteredContent.length === 0 && query ? (
-        <p className="text-lg">No results found for "{query}"</p>
+        <p className="text-lg">No results found for '{query}'</p>
       ) : (
         <>
           <h2 className="text-2xl font-semibold mb-2">Table 1</h2>
@@ -112,7 +107,7 @@ const Title3 = ({ query, data }: { query: string; data: any[] }) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {paginatedData.map((item) => (
+                    {paginatedData.map((item: any) => (
                       <TableRow key={item.id}>
                         <TableCell className="border bg-green-200 border-gray-800 font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
                           {item.id + "."}
@@ -159,4 +154,4 @@ const Title3 = ({ query, data }: { query: string; data: any[] }) => {
   );
 };
 
-export default Title3;
+export default Tables;

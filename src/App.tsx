@@ -4,69 +4,25 @@ import SideBar from "./components/menu/sidebar";
 import TextAreas from "./views/pages/TextAreas";
 import Cards from "./views/pages/Cards";
 import Layout from "./components/menu/layout";
-import { useSearch } from "./context/SearchContext";
+import { useSearch, QueryItem } from "./context/SearchContext";
 import Tables from "./views/pages/Tables";
 import Calendar from "./views/pages/Calendar";
 import Profile from "./views/pages/Profile";
 import Login from "./views/login/page";
 import Register from "./views/register/page";
+import KanbanBoard from "./views/pages/KanbanBoard";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
-  const { query } = useSearch();
+  const { query } = useSearch() || { query: [] };
 
   const objContent = [
-    {
-      id: 1,
-      name: "John",
-      surname: "Doe",
-      age: 30,
-      city: "Paris",
-      country: "France",
-      numberCode: "+33",
-      isoCountryCodes: "FRA",
-    },
-    {
-      id: 2,
-      name: "Franci",
-      surname: "Sheshi",
-      age: 24,
-      city: "Tirana",
-      country: "Albania",
-      numberCode: "+355",
-      isoCountryCodes: "Alb",
-    },
-    {
-      id: 3,
-      name: "Artur",
-      surname: "Begolli",
-      age: 36,
-      city: "Munich",
-      country: "Germany",
-      numberCode: "+49",
-      isoCountryCodes: "DEU",
-    },
-    {
-      id: 4,
-      name: "Andre",
-      surname: "Pavigno",
-      age: 32,
-      city: "Firenze",
-      country: "Italy",
-      numberCode: "+39",
-      isoCountryCodes: "Ita",
-    },
-    {
-      id: 5,
-      name: "Alessio",
-      surname: "Rondo",
-      age: 29,
-      city: "Roma",
-      country: "Italy",
-      numberCode: "+39",
-      isoCountryCodes: "Ita",
-    },
+    { id: 1, name: "John", surname: "Doe", age: 30, city: "Paris" },
+    { id: 2, name: "Franci", surname: "Sheshi", age: 24, city: "Tirana" },
+    { id: 3, name: "Artur", surname: "Begolli", age: 36, city: "Munich" },
+    { id: 4, name: "Andre", surname: "Pavigno", age: 32, city: "Firenze" },
+    { id: 5, name: "Alessio", surname: "Rondo", age: 29, city: "Roma" },
   ];
 
   const handleRegister = (
@@ -82,11 +38,10 @@ const App = () => {
     const storedUsers = JSON.parse(
       localStorage.getItem("userCredentials") || "[]"
     );
-
     const userExists = storedUsers.some(
-      (u: any) =>
-        u.username.toLowerCase() === username.toLowerCase() ||
-        u.email.toLowerCase() === email.toLowerCase()
+      (u: QueryItem) =>
+        u.name.toLowerCase() === username.toLowerCase() ||
+        u.surname.toLowerCase() === surname.toLowerCase()
     );
 
     if (!userExists) {
@@ -100,12 +55,11 @@ const App = () => {
         city,
         country,
       };
-
       const updatedUsers = [...storedUsers, newUser];
       localStorage.setItem("userCredentials", JSON.stringify(updatedUsers));
       localStorage.setItem("currentUser", JSON.stringify(newUser));
 
-      navigate("/profile", { state: { newUser } });
+      navigate("/pages/profile", { state: { newUser } });
       setIsAuthenticated(true);
     }
   };
@@ -114,39 +68,29 @@ const App = () => {
     const storedUsers = JSON.parse(
       localStorage.getItem("userCredentials") || "[]"
     );
-
     const foundUser = storedUsers.find(
       (user: any) => user.username === username && user.password === password
     );
 
     if (foundUser) {
       localStorage.setItem("currentUser", JSON.stringify(foundUser));
-
       setIsAuthenticated(true);
       navigate("/pages/textareas");
-
       console.log("User logged in successfully: ", foundUser);
     }
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("currentUser");
     setIsAuthenticated(false);
   };
 
   useEffect(() => {
-    const storedUsers = JSON.parse(
-      localStorage.getItem("userCredentials") || "[]"
-    );
     const storedUser = localStorage.getItem("currentUser");
-
     if (storedUser) {
       setIsAuthenticated(true);
       navigate("/pages/textareas");
     }
-
-    const checkIfUserExists = (username: string) => {
-      return storedUsers.some((user: any) => user.username === username);
-    };
   }, []);
 
   return (
@@ -179,6 +123,10 @@ const App = () => {
                   <Route
                     path="/pages/profile"
                     element={<Profile query={query} />}
+                  />
+                  <Route
+                    path="/pages/kanban_board"
+                    element={<KanbanBoard query={query} />}
                   />
                 </Routes>
               </div>

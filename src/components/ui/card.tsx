@@ -4,15 +4,17 @@ import { cn } from "../../lib/utils";
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+>(({ className, children }, ref) => (
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "rounded-lg border bg-card text-card-foreground shadow-sm p-4",
       className
     )}
-    {...props}
-  />
+    style={{ minHeight: "200px", minWidth: "250px" }}
+  >
+    {children}
+  </div>
 ));
 Card.displayName = "Card";
 
@@ -24,19 +26,30 @@ const CardHeader = React.forwardRef<
 ));
 CardHeader.displayName = "CardHeader";
 
+// Updated CardTitle to ensure it has content
 const CardTitle = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
-      className
-    )}
-    {...props}
-  />
-));
+  HTMLHeadingElement,
+  React.HTMLAttributes<HTMLHeadingElement> & { children: React.ReactNode }
+>(({ className, children, ...props }, ref) => {
+  // Check if children are provided and give a fallback
+  if (!children) {
+    console.warn("CardTitle must have content.");
+    return null; // Optionally return null or some default content
+  }
+
+  return (
+    <h3
+      ref={ref}
+      className={cn(
+        "text-2xl font-semibold leading-none tracking-tight",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </h3>
+  );
+});
 CardTitle.displayName = "CardTitle";
 
 const CardDescription = React.forwardRef<
@@ -54,8 +67,14 @@ CardDescription.displayName = "CardDescription";
 const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+>(({ className, children }, ref) => (
+  <div
+    ref={ref}
+    className={cn("p-6 pt-0 overflow-auto", className)}
+    style={{ maxHeight: "400px" }}
+  >
+    {children}
+  </div>
 ));
 CardContent.displayName = "CardContent";
 

@@ -21,7 +21,6 @@ import {
 } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";
 
-const ITEM_HEIGHT = 48;
 const options = ["Update Details", "Update Avatar"];
 
 const Profile = ({ query }: { query: string }) => {
@@ -124,6 +123,13 @@ const Profile = ({ query }: { query: string }) => {
     handleClose();
   };
 
+  const handleFieldChange = (field: string, value: string | number) => {
+    setUserData((prevData: any) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+
   useEffect(() => {
     const storedUsers = JSON.parse(
       localStorage.getItem("userCredentials") || "[]"
@@ -163,6 +169,7 @@ const Profile = ({ query }: { query: string }) => {
                 ...
               </IconButton>
               <Menu
+                className="max-h-56 w-52"
                 onClose={handleClose}
                 anchorEl={anchorEl}
                 id="long-menu"
@@ -170,12 +177,6 @@ const Profile = ({ query }: { query: string }) => {
                   "aria-labelledby": "long-button",
                 }}
                 open={open}
-                PaperProps={{
-                  style: {
-                    maxHeight: ITEM_HEIGHT * 4.5,
-                    width: "20ch",
-                  },
-                }}
               >
                 {options.map((option) => (
                   <MenuItem
@@ -194,7 +195,7 @@ const Profile = ({ query }: { query: string }) => {
                 <div className="flex justify-start text-center mt-11 ml-16">
                   <input
                     onChange={handleAvatarChange}
-                    style={{ display: "none" }}
+                    className="hidden"
                     id="avatar-upload"
                     accept="image/*"
                     type="file"
@@ -215,23 +216,27 @@ const Profile = ({ query }: { query: string }) => {
                 <div className="flex justify-between text-center mt-4 mb-11">
                   <TextField
                     inputRef={fullNameRef}
-                    value={userData.name + " " + userData.surname}
                     defaultValue={`${newUser.name || ""} ${
                       newUser.surname || ""
                     }`}
+                    onChange={(e: any) =>
+                      handleFieldChange("fullName", e.target.value)
+                    }
                     disabled={!editableFields.fullName}
                     className="w-[15%]"
                     variant="outlined"
                     label="Full Name"
                     id="full-name"
                     required
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                   />
 
                   <TextField
                     inputRef={ageRef}
-                    InputProps={{ inputProps: { min: 0 } }}
-                    defaultValue={newUser.age || 0}
-                    value={userData.age}
+                    inputProps={{ min: 0 }}
+                    defaultValue={newUser.age || ""}
                     disabled={!editableFields.age}
                     className="w-[15%]"
                     variant="outlined"
@@ -273,7 +278,9 @@ const Profile = ({ query }: { query: string }) => {
                 <TextField
                   inputRef={emailRef}
                   defaultValue={newUser.email || ""}
-                  value={userData.email}
+                  onChange={(e: any) =>
+                    handleFieldChange("email", e.target.value)
+                  }
                   disabled={!editableFields.email}
                   className="w-[15%]"
                   variant="outlined"

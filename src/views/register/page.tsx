@@ -25,7 +25,7 @@ const Register = ({
   ) => void;
 }) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",

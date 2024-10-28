@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Form, Button, Input } from "antd";
+import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Form, Button, Input } from "antd";
 
 import "../../styles/pages-style.css";
 
 const { TextArea } = Input;
 
-const Title1 = ({ query }: { query: string }) => {
+const TextAreas = ({ query }: { query: any }) => {
   const navigate = useNavigate();
 
   const [objContent] = useState([
@@ -54,8 +54,8 @@ const Title1 = ({ query }: { query: string }) => {
             <div key={index} className="mb-6">
               <h2 className="text-2xl font-semibold mb-2">{item.title}</h2>
               <Button
-                className="mb-4"
                 onClick={() => collapse(index)}
+                className="mb-4"
                 type="primary"
                 size="large"
               >
@@ -65,16 +65,16 @@ const Title1 = ({ query }: { query: string }) => {
                 <div className="bg-white shadow-lg border-2 border-gray-800 rounded-lg p-4 max-w-lg">
                   <Form>
                     <TextArea
-                      className="w-full mb-4"
-                      size="large"
-                      disabled={true}
-                      rows={6}
                       value={JSON.stringify(item, undefined, 2)}
+                      className="w-full mb-4"
+                      disabled={true}
+                      size="large"
+                      rows={6}
                     />
                     <Button
+                      onClick={() => copyFile(item)}
                       className="self-end"
                       htmlType="button"
-                      onClick={() => copyFile(item)}
                       type="dashed"
                       size="small"
                     >
@@ -90,4 +90,4 @@ const Title1 = ({ query }: { query: string }) => {
   );
 };
 
-export default Title1;
+export default TextAreas;
