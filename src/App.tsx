@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import SideBar from "./components/menu/sidebar";
 import TextAreas from "./views/pages/TextAreas";
@@ -18,11 +18,56 @@ const App = () => {
   const { query } = useSearch() || { query: [] };
 
   const objContent = [
-    { id: 1, name: "John", surname: "Doe", age: 30, city: "Paris" },
-    { id: 2, name: "Franci", surname: "Sheshi", age: 24, city: "Tirana" },
-    { id: 3, name: "Artur", surname: "Begolli", age: 36, city: "Munich" },
-    { id: 4, name: "Andre", surname: "Pavigno", age: 32, city: "Firenze" },
-    { id: 5, name: "Alessio", surname: "Rondo", age: 29, city: "Roma" },
+    {
+      id: 1,
+      name: "John",
+      surname: "Doe",
+      age: 30,
+      city: "Paris",
+      country: "France",
+      isoCountryCodes: "Fra",
+      numberCode: "+33",
+    },
+    {
+      id: 2,
+      name: "Franci",
+      surname: "Sheshi",
+      age: 24,
+      city: "Tirana",
+      country: "Albania",
+      isoCountryCodes: "Alb",
+      numberCode: "+355",
+    },
+    {
+      id: 3,
+      name: "Artur",
+      surname: "Begolli",
+      age: 36,
+      city: "Munich",
+      country: "Germany",
+      isoCountryCodes: "Ger",
+      numberCode: "+49",
+    },
+    {
+      id: 4,
+      name: "Andre",
+      surname: "Pavigno",
+      age: 32,
+      city: "Firenze",
+      country: "Italy",
+      isoCountryCodes: "It",
+      numberCode: "+39",
+    },
+    {
+      id: 5,
+      name: "Alessio",
+      surname: "Rondo",
+      age: 29,
+      city: "Roma",
+      country: "Italy",
+      isoCountryCodes: "It",
+      numberCode: "+39",
+    },
   ];
 
   const handleRegister = (

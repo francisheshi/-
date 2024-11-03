@@ -109,7 +109,7 @@ const Title4 = ({ query }: { query: string }) => {
   return (
     <div className="flex-1 justify-center p-8 text-lg">
       <h1 className="text-4xl font-bold mb-5">Calendar</h1>
-      <Calendar onSelect={onDateClick} dateCellRender={dateCellRender} />
+      <Calendar onSelect={onDateClick} cellRender={dateCellRender} />
       {selectedDate && (
         <ReminderModal
           visible={isModalVisible}

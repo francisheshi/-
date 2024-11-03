@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -7,7 +7,6 @@ import {
   TableRow,
 } from "@tremor/react";
 import PaginationTable from "../../components/ui/PaginationTable";
-import { QueryItem } from "../../context/SearchContext";
 import { useNavigate } from "react-router-dom";
 import "../../styles/pages-style.css";
 import { Button } from "antd";
@@ -18,32 +17,26 @@ const Tables = ({ query, data }: { query: string; data: any[] }) => {
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(2);
-
-  // Calculate total pages
   const totalPages = Math.ceil(data.length / rowsPerPage);
 
-  // Get data for current page
   const paginatedData = data.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
-  // Handle page change
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
 
-  // Handle rows per page change
   const handleRowsPerPageChange = (newRowsPerPage: number) => {
     setRowsPerPage(newRowsPerPage);
-    setCurrentPage(1); // Reset to first page after rows per page change
+    setCurrentPage(1);
   };
 
   const collapse = () => {
     setIsTableVisible((prevState) => !prevState);
   };
 
-  // Filter content based on query
   const filteredContent = data.filter((item: any) => {
     const itemIdString = item.id.toString();
     return (

@@ -2,6 +2,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Card } from "@tremor/react";
 import {
   Avatar,
+  Box,
   Button,
   IconButton,
   InputAdornment,
@@ -148,7 +149,7 @@ const Profile = ({ query }: { query: string }) => {
       userData?.surname?.charAt(0) || "S"
     }.`;
     setAvatarText(initials);
-  }, [userData]);
+  });
 
   return (
     <div className="flex-1 p-10 text-lg">
@@ -223,130 +224,122 @@ const Profile = ({ query }: { query: string }) => {
                       handleFieldChange("fullName", e.target.value)
                     }
                     disabled={!editableFields.fullName}
-                    className="w-[15%]"
+                    className="w-[17%] relative"
                     variant="outlined"
                     label="Full Name"
                     id="full-name"
                     required
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
                   />
-
                   <TextField
                     inputRef={ageRef}
                     inputProps={{ min: 0 }}
-                    defaultValue={newUser.age || ""}
+                    onChange={(e: any) =>
+                      handleFieldChange("age", e.target.value)
+                    }
+                    defaultValue={newUser.age || 0}
                     disabled={!editableFields.age}
-                    className="w-[15%]"
+                    className="w-[17%] relative"
                     variant="outlined"
                     label="Age"
                     id="age"
                     required
                   />
-
-                  <TextField
-                    inputRef={statusRef}
-                    defaultValue={newUser.status || ""}
-                    disabled={!editableFields.status}
-                    className="w-[15%]"
-                    variant="outlined"
-                    label="Status"
-                    id="status"
-                    required
-                    select
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          {statusRef.current?.value === "active" && (
-                            <CheckCircle className="text-green-500" />
-                          )}
-                          {statusRef.current?.value === "inactive" && (
-                            <Cancel className="text-blue-500" />
-                          )}
-                        </InputAdornment>
-                      ),
-                    }}
-                  >
-                    <MenuItem value="active">Active</MenuItem>
-                    <MenuItem value="inactive">Inactive</MenuItem>
-                  </TextField>
+                  <Box className="flex items-center w-[17%] relative">
+                    <InputAdornment position="start">
+                      {statusRef.current?.value === "active" && (
+                        <CheckCircle className="text-green-500" />
+                      )}
+                      {statusRef.current?.value === "inactive" && (
+                        <Cancel className="text-blue-500" />
+                      )}
+                    </InputAdornment>
+                    <TextField
+                      defaultValue={newUser.status || "Status.."}
+                      disabled={!editableFields.status}
+                      className="flex-grow"
+                      inputRef={statusRef}
+                      variant="outlined"
+                      label="Status"
+                      id="status"
+                      required
+                      select
+                    >
+                      <MenuItem value="active">Active</MenuItem>
+                      <MenuItem value="inactive">Inactive</MenuItem>
+                    </TextField>
+                  </Box>
                 </div>
               </div>
 
               <div className="flex justify-between text-center mt-4 mb-11">
                 <TextField
-                  inputRef={emailRef}
-                  defaultValue={newUser.email || ""}
+                  defaultValue={newUser.email || "Type email.."}
                   onChange={(e: any) =>
                     handleFieldChange("email", e.target.value)
                   }
                   disabled={!editableFields.email}
-                  className="w-[15%]"
+                  inputRef={emailRef}
+                  className="w-[17%] relative"
                   variant="outlined"
                   label="Email"
-                  id="email"
                   type="email"
+                  id="email"
                   required
                 />
 
-                <TextField
-                  inputRef={roleRef}
-                  defaultValue={newUser.role || ""}
-                  disabled={!editableFields.role}
-                  className="w-[15%]"
-                  variant="outlined"
-                  label="Role"
-                  id="role"
-                  required
-                  select
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        {roleRef.current?.value === "admin" && (
-                          <SupervisorAccount className="text-blue-500" />
-                        )}
-                        {roleRef.current?.value === "user" && (
-                          <Shield className="text-yellow-500" />
-                        )}
-                      </InputAdornment>
-                    ),
-                  }}
-                >
-                  <MenuItem value="admin">Admin</MenuItem>
-                  <MenuItem value="user">User</MenuItem>
-                </TextField>
+                <Box className="flex items-center w-[17.5%] relative">
+                  <InputAdornment position="start">
+                    {roleRef.current?.value === "admin" && (
+                      <SupervisorAccount className="text-blue-500" />
+                    )}
+                    {roleRef.current?.value === "user" && (
+                      <Shield className="text-yellow-500" />
+                    )}
+                  </InputAdornment>
+                  <TextField
+                    defaultValue={newUser.role || "Roles.."}
+                    disabled={!editableFields.role}
+                    className="flex-grow"
+                    inputRef={roleRef}
+                    variant="outlined"
+                    label="Role"
+                    id="role"
+                    required
+                    select
+                  >
+                    <MenuItem value="admin">Admin</MenuItem>
+                    <MenuItem value="user">User</MenuItem>
+                  </TextField>
+                </Box>
 
-                <TextField
-                  inputRef={genderRef}
-                  defaultValue={newUser.gender || ""}
-                  disabled={!editableFields.gender}
-                  className="w-[15%]"
-                  variant="outlined"
-                  label="Gender"
-                  id="gender"
-                  required
-                  select
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        {genderRef.current?.value === "male" && (
-                          <Male className="text-blue-500" />
-                        )}
-                        {genderRef.current?.value === "female" && (
-                          <Female className="text-pink-500" />
-                        )}
-                        {genderRef.current?.value === "other" && (
-                          <Transgender className="text-purple-500" />
-                        )}
-                      </InputAdornment>
-                    ),
-                  }}
-                >
-                  <MenuItem value="male">Male</MenuItem>
-                  <MenuItem value="female">Female</MenuItem>
-                  <MenuItem value="other">Other</MenuItem>
-                </TextField>
+                <Box className="flex items-center w-[17%] relative">
+                  <InputAdornment position="start">
+                    {genderRef.current?.value === "male" && (
+                      <Male className="text-blue-500" />
+                    )}
+                    {genderRef.current?.value === "female" && (
+                      <Female className="text-pink-500" />
+                    )}
+                    {genderRef.current?.value === "other" && (
+                      <Transgender className="text-purple-500" />
+                    )}
+                  </InputAdornment>
+                  <TextField
+                    inputRef={genderRef}
+                    defaultValue={newUser.gender || "Gender.."}
+                    disabled={!editableFields.gender}
+                    className="flex-grow"
+                    variant="outlined"
+                    label="Gender"
+                    id="gender"
+                    required
+                    select
+                  >
+                    <MenuItem value="male">Male</MenuItem>
+                    <MenuItem value="female">Female</MenuItem>
+                    <MenuItem value="other">Other</MenuItem>
+                  </TextField>
+                </Box>
               </div>
 
               <Button
